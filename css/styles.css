@@ -26,3 +26,35 @@ p {
     color: #999;
     margin-top: 20px;
 }
+.glitch {
+    position: relative;
+    font-family: Arial, sans-serif;
+    color: #01e279; /* Couleur de votre choix */
+    animation: glitch 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitch {
+    0% {
+        top: 0;
+        left: 0;
+    }
+    25% {
+        top: -2px;
+        left: 2px;
+        text-shadow: -5px 5px 0 #fb31af, -10px 10px 0 #01e279;
+    }
+    50% {
+        top: 2px;
+        left: -2px;
+        text-shadow: 5px -5px 0 #fb31af, 10px -10px 0 #01e279;
+    }
+    75% {
+        top: 0;
+        left: 0;
+        text-shadow: 0;
+    }
+    100% {
+        top: 0;
+        left: 0;
+    }
+}
