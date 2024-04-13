@@ -6,10 +6,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000000;
-    background-image: url('../img/rmx_ia_4k_transparent.png');
-    background-size: cover;
-    background-position: center;
+    background-color: #f0f0f0;
 }
 
 .construction-wrapper {
@@ -17,11 +14,11 @@ body {
 }
 
 h1 {
-    color: #01e279;
+    color: #333;
 }
 
 p {
-    color: #fb31af;
+    color: #666;
 }
 
 #countdown {
