@@ -1,18 +1,12 @@
 const grid = document.getElementById("nft-grid");
 
-// Simule une liste de NFTs avec IPFS hashes et types (audio/zip)
-const fakeNFTs = Array.from({ length: 24 }, (_, i) => {
-  const isAudio = Math.random() < 0.5;
-  const hash = `QmFakeHash${i.toString().padStart(2, "0")}`;
-  const filename = isAudio ? `track${i}.mp3` : `archive${i}.zip`;
-  return {
-    ipfsHash: hash,
-    type: isAudio ? "audio" : "zip",
-    filename,
-  };
-});
+const contractAddress = "KT1KUwqMxa3KGetV9PqBpU65gbNAj8z3jpTX";
+const tzktApi = `https://api.tzkt.io/v1/tokens?contract=${contractAddress}&limit=1000`;
 
-// Génère une couleur aléatoire abstraite
+function ipfsToHttp(uri) {
+  return uri.replace(/^ipfs:\/\//, "https://ipfs.io/ipfs/");
+}
+
 function randomColor() {
   const h = Math.floor(Math.random() * 360);
   const s = 60 + Math.random() * 40;
@@ -24,19 +18,45 @@ function createTile(nft) {
   const div = document.createElement("div");
   div.className = "square";
   div.style.background = randomColor();
-  div.title = `Télécharger ${nft.filename}`;
+  div.title = nft.name || "NFT";
 
-  // Téléchargement via IPFS gateway
   const link = document.createElement("a");
-  link.href = `https://ipfs.io/ipfs/${nft.ipfsHash}?filename=${nft.filename}`;
-  link.download = nft.filename;
+  link.href = nft.downloadUrl;
+  link.download = nft.filename || "lostwave_nft";
   link.appendChild(div);
 
   return link;
 }
 
-// Affiche tous les carrés
-fakeNFTs.forEach(nft => {
-  const tile = createTile(nft);
-  grid.appendChild(tile);
-});
+async function fetchNFTs() {
+  try {
+    const res = await fetch(tzktApi);
+    const data = await res.json();
+
+    const validNFTs = data
+      .map(token => {
+        const meta = token.metadata || {};
+        const uri = meta.artifactUri || meta.displayUri || meta.thumbnailUri;
+        if (!uri || !uri.startsWith("ipfs://")) return null;
+
+        const filename = meta.name?.replace(/\s+/g, "_") || token.tokenId + ".bin";
+        return {
+          name: meta.name,
+          downloadUrl: ipfsToHttp(uri),
+          filename,
+        };
+      })
+      .filter(Boolean);
+
+    validNFTs.forEach(nft => {
+      const tile = createTile(nft);
+      grid.appendChild(tile);
+    });
+
+  } catch (err) {
+    console.error("Erreur lors du chargement des NFTs :", err);
+    grid.innerHTML = "<p>Erreur lors du chargement des NFTs.</p>";
+  }
+}
+
+fetchNFTs();
