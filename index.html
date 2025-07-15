@@ -3,21 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Accueil - Mon Site IPFS</title>
+  <title>R_M_X</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <nav>
     <a href="index.html">Accueil</a>
     <a href="lostwave.html">Lostwave</a>
-    <!-- Ajoute ici d'autres liens plus tard -->
   </nav>
 
   <main>
-    <h1>Bienvenue sur le site</h1>
-    <p style="text-align: center; max-width: 600px; margin: 2em auto;">
-      Ce site statique est hébergé sur IPFS. Utilisez le menu pour explorer les différentes sections, comme la collection <strong>Lostwave</strong> qui regroupe des NFTs audio et ZIP.
-    </p>
-  </main>
+  <h1>R_m_X</h1>
+
+  <img src="img/logo_rmx.png" alt="Logo" style="
+  max-width: 100%;
+  max-height: 720px; /* limite la hauteur max */
+  height: auto;      /* garde les proportions */
+  display: block;
+  margin: 0 auto 1em auto;
+  " />
+  <p style="
+    max-width: 90vw;
+    margin: 2em auto;
+    text-align: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  ">
+SmUgdmFpcyB2b3VzIGxhIGZhaXJlIGNvdXJ0ZSBpY2ksIHZvdXMgdHJvdXZlcmV6IGNlIHF1ZSBqJ2FpbWUgZXQgY2UgcXVlIGonYWkgZW52aWUgZGUgdm91cyBwYXJ0YWdlci4gQ2Ugc2l0ZSB2YSDDqXZvbHVlciwgamUgbmUgc2FpcyBwYXMgZGFucyBxdWVsbGUgZGlyZWN0aW9uLiBCcmVmLiBCaWVudmVudWUu  </p>
+</main>
+<audio id="bg-audio" loop>
+  <source src="audio/image.wav" type="audio/mpeg" />
+</audio>
+
+<script>
+  document.addEventListener('click', function () {
+    const audio = document.getElementById('bg-audio');
+    audio.play().catch(e => console.log("Lecture bloquée :", e));
+  }, { once: true }); // Ne s'exécute qu'une seule fois
+</script>
+
 </body>
 </html>

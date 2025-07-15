@@ -1,6 +1,6 @@
 const grid = document.getElementById("nft-grid");
 
-const contractAddress = "KT1KUwqMxa3KGetV9PqBpU65gbNAj8z3jpTX";
+const contractAddress = "tz1hccAaa3wocPEiCa8VELpzesgdXqg7NVKg";
 const tzktApi = `https://api.tzkt.io/v1/tokens?contract=${contractAddress}&limit=1000`;
 
 function ipfsToHttp(uri) {

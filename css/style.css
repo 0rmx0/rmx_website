@@ -1,5 +1,12 @@
+@font-face {
+  font-family: 'HelpMe';
+  src: url('../fonts/HelpMe.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-  font-family: sans-serif;
+  font-family: 'HelpMe', sans-serif;
   background: #111;
   color: white;
   margin: 0;
@@ -41,3 +48,8 @@ h1 {
 .square:hover {
   transform: scale(1.05);
 }
+
+audio {
+  display: none;
+}
+
