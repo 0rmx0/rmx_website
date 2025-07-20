@@ -53,3 +53,19 @@ audio {
   display: none;
 }
 
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1em; /* espace entre les éléments, ajuste si besoin */
+}
+
+.gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.gallery a {
+  display: block;
+}
