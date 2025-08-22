@@ -33,16 +33,17 @@
   ">
 SnVzdGUgdW4gaHVtYWluIHF1aSBmYWl0IHNlIHF1J2lsIHBldXQgcG91ciBhdm9pciBlbnZpZSBkZSBjZSBsZXZlciBjaGFxdWUgam91ci4=</p>
 </main>
-<audio id="bg-audio" loop>
+  <audio id="bg-audio" loop>
   <source src="audio/image.wav" type="audio/mpeg" />
 </audio>
 
 <script>
-  document.addEventListener('click', function () {
+  document.querySelector('h1').addEventListener('click', function () {
     const audio = document.getElementById('bg-audio');
-    audio.play().catch(e => console.log("Lecture bloquée :", e));
-  }, { once: true }); // Ne s'exécute qu'une seule fois
+    audio.play().catch(err => console.log("Lecture bloquée :", err));
+    // Retire l'écouteur après le premier clic
+    this.removeEventListener('click', arguments.callee);
+  });
 </script>
-
 </body>
 </html>

@@ -69,3 +69,15 @@ audio {
 .gallery a {
   display: block;
 }
+
+#bottom-text {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  padding: 1em;
+  background: transparent;
+  font-size: 1.2em;
+  z-index: 100;
+}
