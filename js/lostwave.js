@@ -23,6 +23,7 @@ function createTile(nft) {
   const link = document.createElement("a");
   link.href = nft.downloadUrl;
   link.download = nft.filename || "lostwave_nft";
+  link.target = "_blank"; // <-- ouvre dans un nouvel onglet
   link.appendChild(div);
 
   return link;
