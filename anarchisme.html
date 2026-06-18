@@ -25,14 +25,14 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 
-    .video-frame iframe {
+    .video-frame video {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      border: none;
       border-radius: 10px;
+      background: black;
     }
   </style>
 </head>
@@ -47,19 +47,37 @@
 
   <h1>Anarchisme</h1>
 
-  <div class="videos-container">
-    <div class="video-frame">
-      <iframe title="Livre 1 - Ni Dieu Ni Maître: Une Histoire de l'Anarchisme - La Volupté de la Destruction (1840-1914) version longue" width="560" height="315" src="https://media.krashboyz.org/videos/embed/xhwt9CLtZBuxpy1rxr8Tmg" allow="fullscreen" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" style="border: 0px;"></iframe>
-    </div>
-    <div class="video-frame">
-      <iframe title="Livre 2 - Ni Dieu Ni Maître: Une Histoire de l'Anarchisme - La Mémoire des vaincus (1911-1945) version longue" width="560" height="315" src="https://media.krashboyz.org/videos/embed/1nWSRucF8f5uzkeCFZfkGy" allow="fullscreen" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" style="border: 0px;"></iframe>
-  </div> 
-    <div class="video-frame">
-      <iframe title="Livre 3 - Ni Dieu Ni Maître: Une Histoire de l'Anarchisme - Des fleurs et et des pavés (1944-1969)" width="560" height="315" src="https://media.krashboyz.org/videos/embed/4uPx6TytjbugXhB1wqB22E" allow="fullscreen" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" style="border: 0px;"></iframe>
-    </div>
-    <div class="video-frame">
-      <iframe title="Livre 4 - Ni Dieu Ni Maître: Une Histoire de l'Anarchisme - Les réseaux de la colère (1965-2012)" width="560" height="315" src="https://media.krashboyz.org/videos/embed/xuzxbRdPb7oeYbsJ1LezL3" allow="fullscreen" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" style="border: 0px;"></iframe>
-    </div>
+<div class="videos-container">
+
+  <div class="video-frame">
+    <video controls preload="none">
+      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 1 - La Volupté de la destruction (1840-1914) version longue 1080p.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+  </div>
+
+  <div class="video-frame">
+    <video controls preload="none">
+      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 2 - La Mémoire des vaincus (1911-1945) version longue 1080p.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+  </div>
+
+  <div class="video-frame">
+    <video controls preload="none">
+      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 3 - Des fleurs et des pavés (1944-1969) 1080p.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+  </div>
+
+  <div class="video-frame">
+    <video controls preload="none">
+      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 4 - Les réseaux de la colère (1965-2012) 1080p.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+  </div>
+
+</div>
   <audio id="bg-audio" loop>
     <source src="audio/ANARCHISME.mp3" type="audio/mpeg" />
   </audio>
