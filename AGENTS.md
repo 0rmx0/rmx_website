@@ -28,6 +28,9 @@ Pages : `index.html`, `lostwave.html` (NFT Tezos, contrat `KT1CpFdy2sDbCBfLv3L6E
 
 Bugs connus à corriger (Phase 1 du plan) :
 1. `anarchisme.html` référence 4 vidéos dans `video/` qui **n'existe pas** (revert git) → page cassée.
+   **[DÉCISION OWNER]** Ces vidéos font plusieurs Go : v1 en `video-embed` (hébergement
+   externe type YouTube non listé / Peertube), évolution pinning/décentralisé plus tard.
+   Ne pas recompresser sans vérifier d'éventuels éléments cachés dans l'audio.
 2. `lostwave.html` : base64 corrompu (`w4l0cmFuZ2U...` → devrait décoder « Étrange Sensation »).
 3. `nftgallery.html` : base64 avec coquille (décodage : « libertÉ, dÑmocratie, partage »).
 4. Les `.wav` sont déclarés `type="audio/mpeg"` → corriger en `audio/wav`.
@@ -112,7 +115,21 @@ Types de blocs prévus (le renderer ne sait rendre QUE ces types ; prévoir gén
 - `nft-grid` : `{chain, contract, render:"color-tiles"}` — lostwave
 - `nft-gallery` : `{chain, collection, filter:true}` — galerie
 - `video-frame` : `{source, aspect:"16/9"}`
+- `video-embed` : `{provider, video_id, aspect:"16/9"}` — YouTube/Peertube/URL externe.
+  **[DÉCISION OWNER]** v1 du site : les vidéos de la page Anarchisme en `video-embed`
+  (elles font plusieurs Go, trop lourdes pour Arweave/GitHub). Évolution possible plus
+  tard : pinning IPFS ou autre hébergement décentralisé → le contrat étant la source de
+  vérité, changer d'hébergeur = une transaction, pas une refonte.
+- `game-embed` : `{source, engine:"rpgmaker", mode:"iframe"}` — **[À DÉFINIR PLUS TARD]**
+  le jeu RPG Maker n'existe pas encore ; type prévu pour le jour où il existera.
+- `project-list` : `{projects:[{name, description, url, status:"wip"|"done"|"abandonné"}]}`
+  — liste des projets dev du owner. Visible ou caché : non tranché (patterns possibles :
+  page au menu, page hors menu, page « cimetière » des projets abandonnés).
 - `html-raw` : `{html}` — soupape de sécurité, confiance totale en l'owner
+
+**Règle de sizing :** Arweave = assets < ~10-20 Mo. Au-delà (vidéos lourdes, bundles
+de jeu) : pointeur vers hébergement externe via `video-embed`/`game-embed`, modifiable
+par transaction.
 
 Règle : ajouter un nouveau type de bloc = mettre à jour le renderer = republier les
 miroirs (l'unique cas où les miroirs doivent être redéployés).
