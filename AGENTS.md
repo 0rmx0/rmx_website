@@ -1,0 +1,184 @@
+# AGENTS.md — Instructions projet rmx_website
+
+Ce fichier est le contexte de référence pour tout agent (IA ou humain) travaillant sur ce dépôt.
+**Le lire en entier avant toute action.** Il reflète les décisions prises avec le propriétaire
+(auteur = owner). Ne pas contredire les décisions marquées [FIGÉ].
+
+## 1. Nature du projet
+
+Site personnel de **R_M_X** (0rmx0) : site statique d'art numérique, thématiques
+lostwave / anarchisme / NFT. Esthétique : messages cachés (base64), audios cachés
+(déclenchés au clic sur le `<h1>`), **images stéganographiées dans les spectrogrammes
+des fichiers `.wav`** (`audio/image.wav`, `audio/pp.wav` — vérifié, ce sont des
+spectrogrammes à la Aphex Twin).
+
+Langue de travail : **français** (avec le owner). Code et commentaires : français accepté.
+
+Philosophie : œuvre à couches de découverte successives. Le lostwave = récupérer ce que
+le temps a effacé. Le NFT est utilisé pour la **décentralisation du contenu, PAS pour la
+propriété** (le paradoxe avec « La propriété, c'est le vol ! » est assumé : les NFT
+servent de containers de contenu décentralisés / CDN communautaire).
+
+## 2. État actuel du site (analyse faite)
+
+Pages : `index.html`, `lostwave.html` (NFT Tezos, contrat `KT1CpFdy2sDbCBfLv3L6EHpcTfjG8rnXMHPo`),
+`nftgallery.html` (NFT MultiversX, collections `STREET-b10df3`, `YGGDRSL23-075ceb`),
+`anarchisme.html`. CSS : `css/style.css`, police `fonts/HelpMe.woff2`. JS : `js/lostwave.js`,
+`js/nftgallery.js`.
+
+Bugs connus à corriger (Phase 1 du plan) :
+1. `anarchisme.html` référence 4 vidéos dans `video/` qui **n'existe pas** (revert git) → page cassée.
+2. `lostwave.html` : base64 corrompu (`w4l0cmFuZ2U...` → devrait décoder « Étrange Sensation »).
+3. `nftgallery.html` : base64 avec coquille (décodage : « libertÉ, dÑmocratie, partage »).
+4. Les `.wav` sont déclarés `type="audio/mpeg"` → corriger en `audio/wav`.
+5. `logo_rmx.png` = 1,3 Mo → à compresser.
+6. `ANARCHISME.mp3` = 23 Mo ; **vérifier son spectrogramme avant gravure** (le mp3 lossy
+   a pu détruire une éventuelle image cachée).
+7. Script audio-clic dupliqué ×4 avec `arguments.callee` (obsolète).
+
+**RÈGLE CRITIQUE — fichiers audio :** ne JAMAIS convertir/recompresser les `.wav`
+(lossy = destruction des images spectrogramme). Le format wav 16-bit est voulu.
+Le seul fix autorisé : le type MIME dans le HTML.
+
+Messages base64 décodés (contexte, ne pas « réparer » le principe) :
+- index : « Juste un humain qui fait se qu'il peut pour avoir envie de ce lever chaque jour. »
+- anarchisme : « La propriété, c'est le vol ! »
+- galerie : « liberté, démocratie, partage. » (coquille à corriger)
+- lostwave : « Étrange Sensation » (corrompu, à corriger)
+
+## 3. Objectif principal [FIGÉ]
+
+Déployer le site de façon **décentralisée, immuable mais modifiable** :
+- Immuabilité = contenu gravé onchain / permaweb, aucune dépendance à un serveur du owner.
+- Modifiable = pattern **append-only** : chaque version est immuable, un pointeur onchain
+  désigne la version courante ; l'historique complet est conservé pour toujours (archéologie
+  du site, esprit lostwave).
+- Test de validation de toute décision d'architecture : **« Si le serveur du owner et
+  GitHub explosent ce soir, le site vit-il ? »** → doit toujours être OUI.
+
+## 4. Architecture décidée — « Variante A » [FIGÉ]
+
+**La structure du site vit dans un smart contract Tezos ; le HTML est un renderer générique
+muet qui lit le contrat et rend les données.** Modifier le site = une transaction, jamais
+un redéploiement des miroirs.
+
+Répartition des rôles :
+| Couche | Technologie | Rôle |
+|---|---|---|
+| Structure (menu, pages, blocs, messages cachés) | **Contrat Tezos** (SmartPy) | source de vérité, append-only |
+| Contenu lourd (audio, images) | **Arweave** (via arkb) | stocké une fois, pour toujours, octet-par-octet |
+| Galeries NFT | Tezos (FA2, existant) + MultiversX (existant) | contenu déjà décentralisé |
+| Front-ends / miroirs (jetables) | GitHub Pages, gateways Arweave/IPFS, `0rmx0.tez`, `0rmx0.brave` | aucune n'est source de vérité |
+| Serveur perso du owner | **jamais référencé dans le contrat** ; éventuel nœud contributeur (gateway/IPFS/Tezos) uniquement | jamais une dépendance |
+
+Chaînes choisies : **Tezos** (structure + NFT lostwave existants, quasi gratuit, Ghostnet
+pour tester) et **MultiversX** (galerie existante, chaîne bien connue du owner). Arweave retenu pour
+les gros fichiers (~3-6 € une fois pour ~32 Mo). Domaines : `0rmx0.brave` (existant,
+Unstoppable — ne se résout pas dans un navigateur standard sans extension), `0rmx0.tez`
+(Tezos Domains, à acheter), miroir public GitHub Pages. Le owner ne veut PAS dépendre de
+son serveur ; participation au réseau éventuelle, pas de pinning critique.
+
+## 5. Le contrat `SiteStructure` (Tezos / SmartPy)
+
+Storage :
+- `owner : address` (entry point `transfer_owner` pour la pérennité/léguer l'admin)
+- `menu : list<{label, page}>` — l'ordre de la liste = l'ordre des boutons
+- `pages : map<page_key, {title, blocks: list<block>}>`
+- `history : list<snapshot>` — **append-only, jamais modifié**
+- `current_version : nat`
+
+Entry points (tous protégés par `sp.verify(sp.sender == self.data.owner)` sauf lectures) :
+- `set_menu(menu)` — réordonner/renommer les boutons
+- `add_to_menu(label, page)` / `remove_from_menu(page)`
+- `set_page(key, page)` — ajouter/modifier une page
+- `remove_page(key)` — option dure ; voir règle des 3 niveaux de mémoire
+- `publish_snapshot()` — fige l'état courant dans `history`
+- `transfer_owner(addr)`
+
+**Ajout/suppression de pages : compatible par design.** Trois niveaux de mémoire
+(décision du owner) : le **menu** dit ce qui est visible, le **storage** dit ce qui existe,
+l'**history** dit ce qui a existé. Supprimer une page = par défaut la retirer du menu
+seulement (option douce) ; elle reste dans le storage et les snapshots. Une page peut être
+publiée sans être au menu = page cachée (easter egg, cohérent avec l'esthétique).
+
+## 6. Ontologie des blocs [à figer en Phase 0 — docs/blocks.md]
+
+Types de blocs prévus (le renderer ne sait rendre QUE ces types ; prévoir généreusement) :
+- `heading` : `{text}`
+- `text` : `{text}` (base64 supporté)
+- `hidden-text` : `{encoding:"base64", text}` — messages cachés actuels
+- `image` : `{source, alt, style}` — source = tx-id Arweave / CID
+- `audio-spectro` : `{source, trigger:"heading-click"}` — les wav cachés
+- `nft-grid` : `{chain, contract, render:"color-tiles"}` — lostwave
+- `nft-gallery` : `{chain, collection, filter:true}` — galerie
+- `video-frame` : `{source, aspect:"16/9"}`
+- `html-raw` : `{html}` — soupape de sécurité, confiance totale en l'owner
+
+Règle : ajouter un nouveau type de bloc = mettre à jour le renderer = republier les
+miroirs (l'unique cas où les miroirs doivent être redéployés).
+
+## 7. Renderer `js/runtime.js` (vanilla JS, remplace nftgallery.js/lostwave.js)
+
+- `readStructure(contract)` : RPC public Tezos, **gratuit, sans wallet**, fallbacks RPC multiples
+- `renderMenu(menu)`, `renderPage(pageKey)` : routing **hash** (`index.html#lostwave`,
+  plus de fichiers multiples) → un seul fichier HTML servi partout
+- `loadAsset(source)` : cascade gateways (Arweave `arweave.net` → `ar-io.dev` → IPFS
+  `ipfs.io`/`dweb.link` → miroir GitHub)
+- **Mode dégradé** : `snapshot.json` embarqué au build → le site marche même si Tezos
+  est injoignable
+- Réutilise les patterns existants de `js/nftgallery.js` et `js/lostwave.js` (tzkt,
+  api.multiversx.com, ipfs→http)
+
+## 8. Pipeline (CLI Node)
+
+`site build` (valide blocks.json contre l'ontologie, snapshot.json, minifie) →
+`site upload` (arkb → Arweave, renvoie tx-id) → `site publish` (via `admin.html` +
+wallet Beacon/Temple : set_menu/set_page/publish_snapshot) → `site mirror` (GitHub Pages).
+`admin.html` : UI drag-and-drop pour réordonner le menu, éditer blocs, publier snapshot.
+Jamais référencée dans le site public.
+
+**Règle d'or : le manifeste/contrat ne doit JAMAIS référencer une URL appartenant au
+serveur du owner (ni son IP ni termrx.ovh).**
+
+## 9. Plan d'action (ordre des phases)
+
+- **Phase 0** : figer l'ontologie → `docs/blocks.md` [à faire]
+- **Phase 1** : nettoyage du site (bugs listés §2) [à faire]
+- **Phase 2** : contrat `contracts/site_structure.py` + tests simulation SmartPy [à faire]
+- **Phase 3** : `js/runtime.js` — reconstruire le site actuel à l'identique depuis un
+  JSON en dur (preuve du pattern avant déploiement) [à faire]
+- **Phase 4** : pipeline CLI [à faire]
+- **Phase 5** : `admin.html` (Beacon) [à faire]
+- **Phase 6** : Ghostnet (testnet gratuit) → puis mainnet (~1-2 XTZ frais, ~5 AR,
+  `.tez`, < 10 € au total) — nécessite les clés du owner, pas de l'agent
+- **Phase 7** : optionnel — pinning IPFS redondant, serveur en nœud contributeur
+
+Livraison : une branche `vibe/*` + PR par phase. L'agent peut livrer Phases 0-5 testées
+en simulation ; les transactions mainnet (Phase 6) appartiennent au owner.
+
+## 10. Critères de succès
+
+1. Réordonner le menu = une transaction, aucun fichier modifié, tous les miroirs à jour.
+2. `history` contient chaque configuration passée, vérifiable par quiconque.
+3. GitHub Pages coupé → le site vit toujours.
+4. Serveur du owner coupé → aucun impact.
+5. Un tiers avec seulement l'adresse du contrat reconstruit le site complet.
+6. Les `.wav` sur Arweave sont identiques octet-par-octet (spectrogrammes intacts).
+
+## 11. Règles de travail pour l'agent
+
+- Site statique, vanilla JS, zéro framework, zéro build lourd — garder cette nudité
+  (c'est un choix esthétique assumé, « HTML brut lo-fi »).
+- Ne pas ajouter de dépendances sans accord du owner.
+- Ne pas révéler/casser les couches cachées (base64, audios au clic, spectrogrammes) :
+  les préserver, éventuellement les enrichir d'indices (ex : commentaire HTML invitant
+  à « regarder l'intérieur du son »).
+- Les secrets (`termrx.ovh.txt` est gitignoré) : ne jamais les lire, citer, committer.
+- Clés wallets : l'agent n'en a jamais ; tout ce qui signe passe par Beacon/Temple du owner.
+- Before editing : `git status`, lire ce fichier, lire le code cible et les patterns proches.
+- Commiter en français, messages courts, une unité de travail par commit.
+
+## 12. Glossaire owner
+
+- Les audios cachés = intentionnel, ne pas en faire des bugs.
+- Les messages base64 = intentionnels, sauf les 2 corrompus listés §2.
