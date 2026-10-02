@@ -59,12 +59,17 @@ classe CSS du renderer : `hero`, `full`, `inline`).
 
 ### 5. `audio-spectro`
 Audio caché déclenché au clic sur le `heading` de la page (comportement actuel du site).
-**Le fichier doit rester sans perte (wav) : les spectrogrammes contiennent des images.**
+**[PRÉCISION OWNER]** Deux familles d'audios, ne pas confondre :
+- les `.wav` (`image.wav`, `pp.wav`) = contiennent des **images en spectrogramme** →
+  jamais recompresser, format sans perte obligatoire (wav/flac) ;
+- les `.mp3` (`etrangesensation.mp3`, `ANARCHISME.mp3`) = de la **vraie musique**, pas
+  d'image cachée → mp3 acceptable, recompression libre.
 ```json
 { "type": "audio-spectro", "source": "arweave:<tx-id>", "trigger": "heading-click", "loop": true }
 ```
 Champs : `source` (requis), `trigger` (requis, seul `"heading-click"` supporté en v1),
-`loop` (optionnel, bool, défaut `true`).
+`loop` (optionnel, bool, défaut `true`), `lossless` (optionnel, bool — `true` si le fichier
+porte une image spectrogramme ; défaut `false` pour la musique).
 
 ### 6. `nft-grid`
 Grille de tuiles NFT (page Lostwave actuelle) : chaque token rendu comme carré coloré
@@ -142,13 +147,14 @@ Les pages hors menu existent (pattern caché, easter egg). Les niveaux de mémoi
 
 ```
 index      : [heading "R_m_X", image logo, text (base64 du message d'accueil),
-              audio-spectro (image.wav)]
-lostwave   : [heading, nft-grid (tezos KT1Cp…), audio-spectro (etrangesensation.mp3),
+              audio-spectro (image.wav, lossless:true — image en spectrogramme)]
+lostwave   : [heading, nft-grid (tezos KT1Cp…),
+              audio-spectro (etrangesensation.mp3, lossless:false),
               hidden-text (base64 "Étrange Sensation" — à corriger en Phase 1)]
 nftgallery : [heading, nft-gallery (multiversx, STREET-b10df3 + YGGDRSL23-075ceb),
               audio-spectro (pp.wav), hidden-text (base64 corrigé)]
 anarchisme : [heading, 4 × video-embed (décision owner v1),
-              audio-spectro (ANARCHISME.mp3 — spectrogramme à vérifier en Phase 1),
+              audio-spectro (ANARCHISME.mp3, lossless:false — vraie musique),
               hidden-text ("La propriété, c'est le vol !")]
 ```
 
@@ -159,7 +165,8 @@ Pour chaque bloc, le build doit vérifier :
 2. champs requis présents et bien typés ;
 3. `source` au format autorisé (`arweave:` / `ipfs:` / `local:` / `http` selon le type) ;
 4. `video-frame` : source < 20 Mo (règle de sizing) ;
-5. `audio-spectro` : source sans perte (wav/flac) — refuser mp3/ogg.
+5. `audio-spectro` : si `lossless: true` → source wav/flac obligatoire (image
+   spectrogramme à préserver) ; sinon (vraie musique) mp3 accepté.
 
 ---
 
