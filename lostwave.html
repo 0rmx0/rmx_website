@@ -22,14 +22,7 @@
   <source src="audio/etrangesensation.mp3" type="audio/mpeg" />
 </audio>
 
-<script>
-  document.querySelector('h1').addEventListener('click', function () {
-    const audio = document.getElementById('bg-audio');
-    audio.play().catch(err => console.log("Lecture bloquée :", err));
-    // Retire l'écouteur après le premier clic
-    this.removeEventListener('click', arguments.callee);
-  });
-  </script>
+<script src="js/audio-clic.js"></script>
   <p style="
     max-width: 90vw;
     margin: 2em auto;

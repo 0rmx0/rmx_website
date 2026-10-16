@@ -25,12 +25,13 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 
-    .video-frame video {
+    .video-frame iframe {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
+      border: 0;
       border-radius: 10px;
       background: black;
     }
@@ -50,31 +51,27 @@
 <div class="videos-container">
 
   <div class="video-frame">
-    <video controls preload="none">
-      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 1 - La Volupté de la destruction (1840-1914) version longue 1080p.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la lecture vidéo.
-    </video>
+    <iframe title="Ni Dieu ni maître, une histoire de l'anarchisme — Livre 1 : La Volupté de la destruction (1840-1914), version longue"
+      src="https://tube.aquilenet.fr/videos/embed/cV4Jy84tg2sr1ZukZNrr6T"
+      allowfullscreen></iframe>
   </div>
 
   <div class="video-frame">
-    <video controls preload="none">
-      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 2 - La Mémoire des vaincus (1911-1945) version longue 1080p.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la lecture vidéo.
-    </video>
+    <iframe title="Ni Dieu ni maître, une histoire de l'anarchisme — Livre 2 : La Mémoire des vaincus (1911-1945), version longue"
+      src="https://tube.aquilenet.fr/videos/embed/koWHapb2kgvFQjZJ6Gtem7"
+      allowfullscreen></iframe>
   </div>
 
   <div class="video-frame">
-    <video controls preload="none">
-      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 3 - Des fleurs et des pavés (1944-1969) 1080p.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la lecture vidéo.
-    </video>
+    <iframe title="Ni Dieu ni maître, une histoire de l'anarchisme — Livre 3 : Des fleurs et des pavés (1944-1969)"
+      src="https://tube.aquilenet.fr/videos/embed/nay1U7GZykXtiHzT1h4vpk"
+      allowfullscreen></iframe>
   </div>
 
   <div class="video-frame">
-    <video controls preload="none">
-      <source src="video/Ni Dieu ni maître une histoire de l'anarchisme - Livre 4 - Les réseaux de la colère (1965-2012) 1080p.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la lecture vidéo.
-    </video>
+    <iframe title="Ni Dieu ni maître, une histoire de l'anarchisme — Livre 4 : Les réseaux de la colère (1965-2012)"
+      src="https://tube.aquilenet.fr/videos/embed/q4ud4Un1efBepmaYxN4Tzf"
+      allowfullscreen></iframe>
   </div>
 
 </div>
@@ -82,15 +79,7 @@
     <source src="audio/ANARCHISME.mp3" type="audio/mpeg" />
   </audio>
 
-  
-  <script>
-    document.querySelector('h1').addEventListener('click', function () {
-      const audio = document.getElementById('bg-audio');
-      audio.play().catch(err => console.log("Lecture bloquée :", err));
-      // Retire l'écouteur après le premier clic
-      this.removeEventListener('click', arguments.callee);
-    });
-  </script>
+  <script src="js/audio-clic.js"></script>
 
   <p id="bottom-text">
 TGEgcHJvcHJpw6l0w6ksIGMnZXN0IGxlIHZvbCAh</p>
