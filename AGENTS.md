@@ -6,7 +6,7 @@ Ce fichier est le contexte de référence pour tout agent (IA ou humain) travail
 
 ## 1. Nature du projet
 
-Site personnel de **R_M_X** (0rmx0) : site statique d'art numérique, thématiques
+Site personnel de **R_M_X** (0rmx0) : site statique d'art numérique, thèmes
 lostwave / anarchisme / NFT. Esthétique : messages cachés (base64), audios cachés
 (déclenchés au clic sur le `<h1>`), **images stéganographiées dans les spectrogrammes
 des fichiers `.wav`** (`audio/image.wav`, `audio/pp.wav` — vérifié, ce sont des
@@ -15,9 +15,14 @@ spectrogrammes à la Aphex Twin).
 Langue de travail : **français** (avec le owner). Code et commentaires : français accepté.
 
 Philosophie : œuvre à couches de découverte successives. Le lostwave = récupérer ce que
-le temps a effacé. Le NFT est utilisé pour la **décentralisation du contenu, PAS pour la
-propriété** (le paradoxe avec « La propriété, c'est le vol ! » est assumé : les NFT
-servent de containers de contenu décentralisés / CDN communautaire).
+le temps a effacé.
+
+**[DÉCISION OWNER — pivot hébergement]** Le projet est **abandonné côté web3
+décentralisé** : plus de smart contract, plus d'Arweave/IPFS, plus de miroirs. Le site
+est un **site statique classique**, hébergé sur le **serveur perso du owner**. Les
+quelques briques web3 déjà en place (galeries NFT Tezos et MultiversX) **restent telles
+quelles en lecture seule**, mais **aucune nouvelle brique web3 ne sera ajoutée**.
+L'ancien plan d'architecture décentralisée est archivé dans `docs/archive-architecture-web3.md`.
 
 ## 2. État actuel du site (analyse faite)
 
@@ -26,16 +31,16 @@ Pages : `index.html`, `lostwave.html` (NFT Tezos, contrat `KT1CpFdy2sDbCBfLv3L6E
 `anarchisme.html`. CSS : `css/style.css`, police `fonts/HelpMe.woff2`. JS : `js/lostwave.js`,
 `js/nftgallery.js`.
 
-Bugs connus à corriger (Phase 1 du plan) :
+Bugs connus à corriger :
 1. `anarchisme.html` référence 4 vidéos dans `video/` qui **n'existe pas** (revert git) → page cassée.
-   **[DÉCISION OWNER]** Ces vidéos font plusieurs Go : v1 en `video-embed` (hébergement
-   externe type YouTube non listé / Peertube), évolution pinning/décentralisé plus tard.
+   **[DÉCISION OWNER]** Ces vidéos font plusieurs Go : v1 en `video-embed`
+   (hébergement externe type YouTube non listé / Peertube), servies par le serveur perso du owner.
    Ne pas recompresser sans vérifier d'éventuels éléments cachés dans l'audio.
 2. `lostwave.html` : base64 corrompu (`w4l0cmFuZ2U...` → devrait décoder « Étrange Sensation »).
 3. `nftgallery.html` : base64 avec coquille (décodage : « libertÉ, dÑmocratie, partage »).
 4. Les `.wav` sont déclarés `type="audio/mpeg"` → corriger en `audio/wav`.
 5. `logo_rmx.png` = 1,3 Mo → à compresser.
-6. `ANARCHISME.mp3` = 23 Mo ; **vérifier son spectrogramme avant gravure** (le mp3 lossy
+6. `ANARCHISME.mp3` = 23 Mo ; **vérifier son spectrogramme avant tout traitement** (le mp3 lossy
    a pu détruire une éventuelle image cachée).
 7. Script audio-clic dupliqué ×4 avec `arguments.callee` (obsolète).
 
@@ -51,151 +56,87 @@ Messages base64 décodés (contexte, ne pas « réparer » le principe) :
 
 ## 3. Objectif principal [FIGÉ]
 
-Déployer le site de façon **décentralisée, immuable mais modifiable** :
-- Immuabilité = contenu gravé onchain / permaweb, aucune dépendance à un serveur du owner.
-- Modifiable = pattern **append-only** : chaque version est immuable, un pointeur onchain
-  désigne la version courante ; l'historique complet est conservé pour toujours (archéologie
-  du site, esprit lostwave).
-- Test de validation de toute décision d'architecture : **« Si le serveur du owner et
-  GitHub explosent ce soir, le site vit-il ? »** → doit toujours être OUI.
+**Un site web statique simple et autonome, servi par le serveur perso du owner** (déploiement
+= copier les fichiers du dépôt dans un dossier servi par le serveur web du owner, par exemple
+nginx/Apache ; aucun build requis). Le site doit fonctionner tel quel sur n'importe quel
+hébergement statique (pas de dépendance à un service externe vital, pas de backend).
 
-## 4. Architecture décidée — « Variante A » [FIGÉ]
+Conséquences de l'abandon du web3 :
+- Les contenus (audio, images) vivent **dans le dépôt** et sont servis par le serveur perso.
+- Les pages galeries NFT existantes (`lostwave.html`, `nftgallery.html`) restent telles quelles :
+  elles lisent les NFT via les API publiques (tzkt, api.multiversx.com) en **lecture seule, sans
+  wallet**. Elles ne doivent plus évoluer côté web3 — maintenance minimale seulement (si une API
+  casse, réparer ou retirer la page, à la demande du owner).
+- **Aucune nouvelle brique web3** (pas de contrat, pas de pinning IPFS/Arweave, pas de domaines
+  blockchain `.tez`/`.brave`, pas de wallet/Beacon dans le code).
 
-**La structure du site vit dans un smart contract Tezos ; le HTML est un renderer générique
-muet qui lit le contrat et rend les données.** Modifier le site = une transaction, jamais
-un redéploiement des miroirs.
+## 4. Architecture actuelle [FIGÉ]
 
-Répartition des rôles :
+Site statique multi-pages en HTML/CSS/JS vanilla :
+
 | Couche | Technologie | Rôle |
 |---|---|---|
-| Structure (menu, pages, blocs, messages cachés) | **Contrat Tezos** (SmartPy) | source de vérité, append-only |
-| Contenu lourd (audio, images) | **Arweave** (via arkb) | stocké une fois, pour toujours, octet-par-octet |
-| Galeries NFT | Tezos (FA2, existant) + MultiversX (existant) | contenu déjà décentralisé |
-| Front-ends / miroirs (jetables) | GitHub Pages, gateways Arweave/IPFS, `0rmx0.tez`, `0rmx0.brave` | aucune n'est source de vérité |
-| Serveur perso du owner | **jamais référencé dans le contrat** ; éventuel nœud contributeur (gateway/IPFS/Tezos) uniquement | jamais une dépendance |
+| Pages | HTML statique (`index.html`, `lostwave.html`, `nftgallery.html`, `anarchisme.html`) | structure et contenu |
+| Contenu lourd (audio, images) | fichiers du dépôt, servis par le serveur perso du owner | aucune dépendance externe vitale |
+| Galeries NFT (existant, figé) | Tezos FA2 + MultiversX, lecture via API publiques (tzkt, api.multiversx.com), sans wallet | galerie perduewave + galerie MultiversX |
+| JS | vanilla (`js/lostwave.js`, `js/nftgallery.js`) | logique des pages |
 
-Chaînes choisies : **Tezos** (structure + NFT lostwave existants, quasi gratuit, Ghostnet
-pour tester) et **MultiversX** (galerie existante, chaîne bien connue du owner). Arweave retenu pour
-les gros fichiers (~3-6 € une fois pour ~32 Mo). Domaines : `0rmx0.brave` (existant,
-Unstoppable — ne se résout pas dans un navigateur standard sans extension), `0rmx0.tez`
-(Tezos Domains, à acheter), miroir public GitHub Pages. Le owner ne veut PAS dépendre de
-son serveur ; participation au réseau éventuelle, pas de pinning critique.
+Domaines : le owner gère lui-même son domaine sur son serveur perso. Pas de domaine blockchain.
 
-## 5. Le contrat `SiteStructure` (Tezos / SmartPy)
+## 5. Hébergement / déploiement [DÉCISION OWNER]
 
-Storage :
-- `owner : address` (entry point `transfer_owner` pour la pérennité/léguer l'admin)
-- `menu : list<{label, page}>` — l'ordre de la liste = l'ordre des boutons
-- `pages : map<page_key, {title, blocks: list<block>}>`
-- `history : list<snapshot>` — **append-only, jamais modifié**
-- `current_version : nat`
+Le site est hébergé sur le **serveur perso du owner** (`termrx.ovh`). Déploiement :
+`git pull` (ou copie des fichiers) sur le serveur, dans le dossier servi par le serveur web.
+Aucun pipeline, aucun build, aucun contrat à mettre à jour.
 
-Entry points (tous protégés par `sp.verify(sp.sender == self.data.owner)` sauf lectures) :
-- `set_menu(menu)` — réordonner/renommer les boutons
-- `add_to_menu(label, page)` / `remove_from_menu(page)`
-- `set_page(key, page)` — ajouter/modifier une page
-- `remove_page(key)` — option dure ; voir règle des 3 niveaux de mémoire
-- `publish_snapshot()` — fige l'état courant dans `history`
-- `transfer_owner(addr)`
+Les secrets (`termrx.ovh.txt` est gitignoré) : ne jamais les lire, citer, committer.
+Clés wallets : l'agent n'en a jamais ; aucun code du site ne doit en demander.
 
-**Ajout/suppression de pages : compatible par design.** Trois niveaux de mémoire
-(décision du owner) : le **menu** dit ce qui est visible, le **storage** dit ce qui existe,
-l'**history** dit ce qui a existé. Supprimer une page = par défaut la retirer du menu
-seulement (option douce) ; elle reste dans le storage et les snapshots. Une page peut être
-publiée sans être au menu = page cachée (easter egg, cohérent avec l'esthétique).
+## 6. Règles relatives aux NFT existants [FIGÉ]
 
-## 6. Ontologie des blocs [à figer en Phase 0 — docs/blocks.md]
+- Les galeries NFT existantes restent en **lecture seule** (API publiques tzkt /
+  api.multiversx.com, gratuit, sans wallet) — patterns déjà présents dans
+  `js/nftgallery.js` et `js/lostwave.js`.
+- Aucune écriture onchain, aucun wallet, aucune nouvelle collection, aucun nouveau
+  champ web3 dans le code ou la doc.
+- Si une API publique change/casse : réparation minimale ou retrait de la page, à la
+  demande du owner.
 
-Types de blocs prévus (le renderer ne sait rendre QUE ces types ; prévoir généreusement) :
-- `heading` : `{text}`
-- `text` : `{text}` (base64 supporté)
-- `hidden-text` : `{encoding:"base64", text}` — messages cachés actuels
-- `image` : `{source, alt, style}` — source = tx-id Arweave / CID
-- `audio-spectro` : `{source, trigger:"heading-click"}` — les wav cachés
-- `nft-grid` : `{chain, contract, render:"color-tiles"}` — lostwave
-- `nft-gallery` : `{chain, collection, filter:true}` — galerie
-- `video-frame` : `{source, aspect:"16/9"}`
-- `video-embed` : `{provider, video_id, aspect:"16/9"}` — YouTube/Peertube/URL externe.
-  **[DÉCISION OWNER]** v1 du site : les vidéos de la page Anarchisme en `video-embed`
-  (elles font plusieurs Go, trop lourdes pour Arweave/GitHub). Évolution possible plus
-  tard : pinning IPFS ou autre hébergement décentralisé → le contrat étant la source de
-  vérité, changer d'hébergeur = une transaction, pas une refonte.
-- `game-embed` : `{source, engine:"rpgmaker", mode:"iframe"}` — **[À DÉFINIR PLUS TARD]**
-  le jeu RPG Maker n'existe pas encore ; type prévu pour le jour où il existera.
-- `project-list` : `{projects:[{name, description, url, status:"wip"|"done"|"abandonné"}]}`
-  — liste des projets dev du owner. Visible ou caché : non tranché (patterns possibles :
-  page au menu, page hors menu, page « cimetière » des projets abandonnés).
-- `html-raw` : `{html}` — soupape de sécurité, confiance totale en l'owner
+## 7. Plan d'action
 
-**Règle de sizing :** Arweave = assets < ~10-20 Mo. Au-delà (vidéos lourdes, bundles
-de jeu) : pointeur vers hébergement externe via `video-embed`/`game-embed`, modifiable
-par transaction.
-
-Règle : ajouter un nouveau type de bloc = mettre à jour le renderer = republier les
-miroirs (l'unique cas où les miroirs doivent être redéployés).
-
-## 7. Renderer `js/runtime.js` (vanilla JS, remplace nftgallery.js/lostwave.js)
-
-- `readStructure(contract)` : RPC public Tezos, **gratuit, sans wallet**, fallbacks RPC multiples
-- `renderMenu(menu)`, `renderPage(pageKey)` : routing **hash** (`index.html#lostwave`,
-  plus de fichiers multiples) → un seul fichier HTML servi partout
-- `loadAsset(source)` : cascade gateways (Arweave `arweave.net` → `ar-io.dev` → IPFS
-  `ipfs.io`/`dweb.link` → miroir GitHub)
-- **Mode dégradé** : `snapshot.json` embarqué au build → le site marche même si Tezos
-  est injoignable
-- Réutilise les patterns existants de `js/nftgallery.js` et `js/lostwave.js` (tzkt,
-  api.multiversx.com, ipfs→http)
-
-## 8. Pipeline (CLI Node)
-
-`site build` (valide blocks.json contre l'ontologie, snapshot.json, minifie) →
-`site upload` (arkb → Arweave, renvoie tx-id) → `site publish` (via `admin.html` +
-wallet Beacon/Temple : set_menu/set_page/publish_snapshot) → `site mirror` (GitHub Pages).
-`admin.html` : UI drag-and-drop pour réordonner le menu, éditer blocs, publier snapshot.
-Jamais référencée dans le site public.
-
-**Règle d'or : le manifeste/contrat ne doit JAMAIS référencer une URL appartenant au
-serveur du owner (ni son IP ni termrx.ovh).**
-
-## 9. Plan d'action (ordre des phases)
-
-- **Phase 0** : figer l'ontologie → `docs/blocks.md` [à faire]
 - **Phase 1** : nettoyage du site (bugs listés §2) [à faire]
-- **Phase 2** : contrat `contracts/site_structure.py` + tests simulation SmartPy [à faire]
-- **Phase 3** : `js/runtime.js` — reconstruire le site actuel à l'identique depuis un
-  JSON en dur (preuve du pattern avant déploiement) [à faire]
-- **Phase 4** : pipeline CLI [à faire]
-- **Phase 5** : `admin.html` (Beacon) [à faire]
-- **Phase 6** : Ghostnet (testnet gratuit) → puis mainnet (~1-2 XTZ frais, ~5 AR,
-  `.tez`, < 10 € au total) — nécessite les clés du owner, pas de l'agent
-- **Phase 7** : optionnel — pinning IPFS redondant, serveur en nœud contributeur
+- **Phase 2** : vidéos de la page Anarchisme en `video-embed` (hébergées/servies via le
+  serveur perso du owner ou plateformes externes assumées, type YouTube non listé / Peertube) [à faire]
+- L'ancien plan (contrat Tezos, renderer `js/runtime.js`, pipeline CLI, `admin.html`,
+  Ghostnet/mainnet, pinning IPFS) est **abandonné** — voir l'archive
+  `docs/archive-architecture-web3.md` si besoin de contexte historique.
 
-Livraison : une branche `vibe/*` + PR par phase. L'agent peut livrer Phases 0-5 testées
-en simulation ; les transactions mainnet (Phase 6) appartiennent au owner.
+Livraison : une branche `vibe/*` + PR par phase.
 
-## 10. Critères de succès
+## 8. Critères de succès
 
-1. Réordonner le menu = une transaction, aucun fichier modifié, tous les miroirs à jour.
-2. `history` contient chaque configuration passée, vérifiable par quiconque.
-3. GitHub Pages coupé → le site vit toujours.
-4. Serveur du owner coupé → aucun impact.
-5. Un tiers avec seulement l'adresse du contrat reconstruit le site complet.
-6. Les `.wav` sur Arweave sont identiques octet-par-octet (spectrogrammes intacts).
+1. Le site (hors galeries NFT) fonctionne **100 % hors-ligne** : ouvrir les fichiers
+   localement ne casse rien (sauf les galeries NFT et embeds vidéo qui nécessitent le réseau).
+2. Copier le dépôt sur le serveur perso suffit au déploiement.
+3. Les `.wav` du dépôt restent identiques octet-par-octet (spectrogrammes intacts).
+4. Les couches cachées (base64, audios au clic, spectrogrammes) sont préservées.
 
-## 11. Règles de travail pour l'agent
+## 9. Règles de travail pour l'agent
 
-- Site statique, vanilla JS, zéro framework, zéro build lourd — garder cette nudité
+- Site statique, vanilla JS, zéro framework, zéro build — garder cette nudité
   (c'est un choix esthétique assumé, « HTML brut lo-fi »).
 - Ne pas ajouter de dépendances sans accord du owner.
 - Ne pas révéler/casser les couches cachées (base64, audios au clic, spectrogrammes) :
   les préserver, éventuellement les enrichir d'indices (ex : commentaire HTML invitant
   à « regarder l'intérieur du son »).
 - Les secrets (`termrx.ovh.txt` est gitignoré) : ne jamais les lire, citer, committer.
-- Clés wallets : l'agent n'en a jamais ; tout ce qui signe passe par Beacon/Temple du owner.
+- Clés wallets : l'agent n'en a jamais ; tout ce qui signe passe par les wallets du owner.
 - Before editing : `git status`, lire ce fichier, lire le code cible et les patterns proches.
 - Commiter en français, messages courts, une unité de travail par commit.
 
-## 12. Glossaire owner
+## 10. Glossaire owner
 
 - Les audios cachés = intentionnel, ne pas en faire des bugs.
 - Les messages base64 = intentionnels, sauf les 2 corrompus listés §2.
+- « Les briques web3 restent mais il n'y en aura pas de nouvelles » : les galeries NFT
+  existantes sont maintenues en l'état, tout nouveau développement web3 est hors périmètre.
