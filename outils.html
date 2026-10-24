@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Outils - R_M_X</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .tools-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2em 1em;
+    }
+    
+    .tool-card {
+      background: #222;
+      border-radius: 15px;
+      padding: 1.5em;
+      margin-bottom: 2em;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+    
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5em;
+      margin-bottom: 1em;
+    }
+    
+    .tool-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    
+    .tool-title {
+      font-size: 1.8em;
+      margin: 0;
+      color: #fff;
+    }
+    
+    .tool-description {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 1em;
+      font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+    }
+    
+    .tool-links {
+      display: flex;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+    
+    .download-btn {
+      display: inline-block;
+      background: #444;
+      color: #fff;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .download-btn:hover {
+      background: #555;
+    }
+    
+    .tool-tags {
+      display: flex;
+      gap: 0.5em;
+      flex-wrap: wrap;
+      margin-top: 0.5em;
+    }
+    
+    .tag {
+      background: #333;
+      padding: 0.2em 0.6em;
+      border-radius: 15px;
+      font-size: 0.8em;
+      color: #aaa;
+    }
+    
+    @media (max-width: 768px) {
+      .tool-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .tool-icon {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .tool-links {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <style>
+    /* Popup pour agrandir les images au survol */
+    .image-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .image-popup.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .popup-image {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 15px;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+      object-fit: contain;
+    }
+    
+    .tool-icon {
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+    }
+    
+    .tool-icon:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="navigation"></div>
+  <script src="js/nav.js"></script>
+
+  <!-- Popup pour agrandir les images -->
+  <div id="image-popup" class="image-popup" onclick="closePopup()">
+    <img id="popup-image" class="popup-image" src="" alt="">
+  </div>
+
+  <main>
+    <h1>Mes Outils</h1>
+    
+    <div class="tools-container">
+      <!-- OBenchmark - Outil de benchmark -->
+      <article class="tool-card">
+        <div class="tool-header">
+          <img src="img/obenchmark.png" alt="OBenchmark Logo" class="tool-icon" onerror="this.src='img/logo_rmx.png'; this.alt='OBenchmark'">
+          <h2 class="tool-title">OBenchmark</h2>
+        </div>
+        <p class="tool-description">
+          Outil de benchmark open-source multiplateforme écrit en Rust. Mesure les performances CPU (multi-cœur, calculs entiers/flottants, tri, compression, cryptographie), mémoire (lecture/écriture cache/non-cache, latence, multi-thread) et disque (lecture/écriture séquentielle, IOPS aléatoires). Système de score normalisé avec interface graphique Slint et export JSON des résultats.
+        </p>
+        <div class="tool-tags">
+          <span class="tag">Rust</span>
+          <span class="tag">Benchmark</span>
+          <span class="tag">Performance</span>
+          <span class="tag">CPU</span>
+          <span class="tag">Memory</span>
+          <span class="tag">Disk</span>
+          <span class="tag">Open-Source</span>
+        </div>
+        <div class="tool-links">
+          <a href="https://github.com/0rmx0/obenchmark/releases" class="download-btn">Télécharger →</a>
+          <a href="https://github.com/0rmx0/obenchmark" class="download-btn">Code source</a>
+        </div>
+      </article>
+
+      <!-- DirTransfert - Outil de transfert décentralisé -->
+      <article class="tool-card">
+        <div class="tool-header">
+          <img src="img/dirtransfert.png" alt="DirTransfert Logo" class="tool-icon" onerror="this.src='img/dirtransfert.png'; this.alt='DirTransfert'">
+          <h2 class="tool-title">DirTransfert</h2>
+        </div>
+        <p class="tool-description">
+          Outil de transfert d'un répertoire complet (et ses sous-répertoires) entre deux PC, décentralisé : aucun serveur tiers, le transfert se fait en direct via TCP entre les machines. Conçu pour plusieurs milliers de fichiers et plusieurs dizaines de Go. Interface graphique (Slint) et CLI disponibles. Fonctionne sur Windows, Linux et macOS.
+        </p>
+        <p class="tool-description">
+          <strong>Fonctionnalités :</strong> Protocole TCP maison avec intégrité SHA-256, chiffrement ChaCha20-Poly1305 de bout en bout, code de jumelage pour authentification, reprise automatique sur interruption, barre de progression en temps réel, ouverture automatique du pare-feu et redirection UPnP.
+        </p>
+        <div class="tool-tags">
+          <span class="tag">Rust</span>
+          <span class="tag">Transfert</span>
+          <span class="tag">Décentralisé</span>
+          <span class="tag">Chiffrement</span>
+          <span class="tag">TCP</span>
+          <span class="tag">Multiplateforme</span>
+          <span class="tag">UPnP</span>
+          <span class="tag">Open-Source</span>
+        </div>
+        <div class="tool-links">
+          <a href="https://github.com/0rmx0/dirtransfert/releases" class="download-btn">Télécharger →</a>
+          <a href="https://github.com/0rmx0/dirtransfert" class="download-btn">Code source</a>
+        </div>
+      </article>
+
+      <!-- Frais Réels - Calculateur d'impôts -->
+      <article class="tool-card">
+        <div class="tool-header">
+          <img src="img/frais-reels.png" alt="Frais Réels Logo" class="tool-icon" onerror="this.src='img/logo_rmx.png'; this.alt='Frais Réels'">
+          <h2 class="tool-title">Frais Réels</h2>
+        </div>
+        <p class="tool-description">
+          Calculateur web pour la déclaration des frais réels en France. Permet de calculer précisément tes frais professionnels déductibles (transport, repas, télétravail, formation, etc.) et de comparer avec l'abattement forfaitaire de 10%. Gère automatiquement les règles officielles des tickets restaurant et des indemnités kilométriques.
+        </p>
+        <p class="tool-description">
+          <strong>Fonctionnalités :</strong> Calcul transport (voiture/moto/TC/vélo), gestion des repas (classiques, tickets restaurant, mixte), autres frais professionnels, remboursements employeur, mutuelle santé, export des résultats (TXT/JSON/CSV), barème officiel mis à jour automatiquement.
+        </p>
+        <div class="tool-tags">
+          <span class="tag">JavaScript</span>
+          <span class="tag">Web</span>
+          <span class="tag">Calculateur</span>
+          <span class="tag">Impôts</span>
+          <span class="tag">Frais Réels</span>
+          <span class="tag">Déclaration</span>
+          <span class="tag">Open-Source</span>
+        </div>
+        <div class="tool-links">
+          <a href="https://0rmx0.github.io/frais-reels/" class="download-btn">Accéder →</a>
+          <a href="https://github.com/0rmx0/frais-reels" class="download-btn">Code source</a>
+        </div>
+      </article>
+
+      <!-- Ajoute tes outils ici -->
+      <!-- Exemple de structure à copier :
+      <article class="tool-card">
+        <div class="tool-header">
+          <img src="img/nom_outil.png" alt="Nom de l'outil" class="tool-icon">
+          <h2 class="tool-title">Nom de l'outil</h2>
+        </div>
+        <p class="tool-description">Description détaillée...</p>
+        <div class="tool-tags">
+          <span class="tag">Tag1</span>
+          <span class="tag">Tag2</span>
+        </div>
+        <div class="tool-links">
+          <a href="lien_telechargement" class="download-btn">Télécharger →</a>
+          <a href="lien_source" class="download-btn">Code source</a>
+        </div>
+      </article>
+      -->
+    </div>
+  </main>
+
+  <audio id="bg-audio" loop>
+    <source src="audio/image.wav" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    document.querySelector('h1').addEventListener('click', function () {
+      const audio = document.getElementById('bg-audio');
+      audio.play().catch(err => console.log("Lecture bloquée :", err));
+      this.removeEventListener('click', arguments.callee);
+    });
+    
+    // Fonctionnalité popup pour agrandir les images au survol
+    const popup = document.getElementById('image-popup');
+    const popupImage = document.getElementById('popup-image');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const toolIcons = document.querySelectorAll('.tool-icon');
+      
+      toolIcons.forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+          popupImage.src = this.src;
+          popupImage.alt = this.alt;
+          popup.classList.add('active');
+        });
+      });
+      
+      // Fermer la popup en cliquant dessus ou sur la page
+      popup.addEventListener('click', function(event) {
+        event.stopPropagation();
+        popup.classList.remove('active');
+      });
+      
+      document.addEventListener('click', function(event) {
+        if (!popup.contains(event.target) && !event.target.classList.contains('tool-icon')) {
+          popup.classList.remove('active');
+        }
+      });
+      
+      // Fermer avec la touche Escape
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          popup.classList.remove('active');
+        }
+      });
+    });
+  </script>
+  <p style="
+    max-width: 90vw;
+    margin: 2em auto;
+    text-align: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  ">
+bGEgamV1bmVzc2UgZW1tZXJkZSBsZSBmcm9udCBuYXRpb25hbA==</p>
+</body>
+</html>
