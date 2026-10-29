@@ -74,17 +74,66 @@
     },
     outils: {
       title: 'OUTILS',
+      help: '[1-9] ouvrir un lien   [ENTRÉE] audio caché   [ÉCHAP] retour au menu',
       lines: [
-        'OBenchmark — benchmark CPU/mémoire/disque en Rust (Slint + CLI).',
-        '  > https://github.com/0rmx0/obenchmark',
+        '1. OBenchmark',
+        '────────────────────────────────────────',
+        'Outil de benchmark open-source multiplateforme écrit en Rust.',
+        'Mesure les performances CPU (multi-cœur, calculs entiers/flottants,',
+        'tri, compression, cryptographie), mémoire (lecture/écriture',
+        'cache/non-cache, latence, multi-thread) et disque (lecture/écriture',
+        'séquentielle, IOPS aléatoires). Score normalisé, interface graphique',
+        'Slint et export JSON des résultats.',
+        'Tags : Rust | Benchmark | Performance | CPU | Memory | Disk | Open-Source',
+        '[1] Télécharger → https://github.com/0rmx0/obenchmark/releases',
+        '[2] Code source → https://github.com/0rmx0/obenchmark',
+        '[3] Icône       → ../img/obenchmark.png',
         '',
-        'DirTransfert — transfert de répertoire P2P chiffré (TCP, ChaCha20-Poly1305).',
-        '  > https://github.com/0rmx0/dirtransfert',
+        '2. DirTransfert',
+        '────────────────────────────────────────',
+        'Outil de transfert d’un répertoire complet (et ses sous-répertoires)',
+        'entre deux PC, décentralisé : aucun serveur tiers, le transfert se',
+        'fait en direct via TCP entre les machines. Conçu pour plusieurs',
+        'milliers de fichiers et plusieurs dizaines de Go. Interface graphique',
+        '(Slint) et CLI disponibles. Windows, Linux et macOS.',
+        'Fonctionnalités : protocole TCP maison avec intégrité SHA-256,',
+        'chiffrement ChaCha20-Poly1305 de bout en bout, code de jumelage pour',
+        'authentification, reprise automatique sur interruption, barre de',
+        'progression en temps réel, ouverture automatique du pare-feu et',
+        'redirection UPnP.',
+        'Tags : Rust | Transfert | Décentralisé | Chiffrement | TCP | Multiplateforme | UPnP | Open-Source',
+        '[4] Télécharger → https://github.com/0rmx0/dirtransfert/releases',
+        '[5] Code source → https://github.com/0rmx0/dirtransfert',
+        '[6] Icône       → ../img/dirtransfert.png',
         '',
-        'Frais Réels — calculateur de frais réels (impôts FR).',
-        '  > https://0rmx0.github.io/frais-reels/',
+        '3. Frais Réels',
+        '────────────────────────────────────────',
+        'Calculateur web pour la déclaration des frais réels en France.',
+        'Calcule précisément les frais professionnels déductibles (transport,',
+        'repas, télétravail, formation, etc.) et compare avec l’abattement',
+        'forfaitaire de 10%. Gère automatiquement les règles officielles des',
+        'tickets restaurant et des indemnités kilométriques.',
+        'Fonctionnalités : calcul transport (voiture/moto/TC/vélo), gestion des',
+        'repas (classiques, tickets restaurant, mixte), autres frais',
+        'professionnels, remboursements employeur, mutuelle santé, export des',
+        'résultats (TXT/JSON/CSV), barème officiel mis à jour automatiquement.',
+        'Tags : JavaScript | Web | Calculateur | Impôts | Frais Réels | Déclaration | Open-Source',
+        '[7] Accéder     → https://0rmx0.github.io/frais-reels/',
+        '[8] Code source → https://github.com/0rmx0/frais-reels',
+        '[9] Icône       → ../img/frais-reels.png',
         '',
         'bGEgamV1bmVzc2UgZW1tZXJkZSBsZSBmcm9udCBuYXRpb25hbA=='
+      ],
+      links: [
+        { label: 'OBenchmark — Télécharger', url: 'https://github.com/0rmx0/obenchmark/releases' },
+        { label: 'OBenchmark — Code source', url: 'https://github.com/0rmx0/obenchmark' },
+        { label: 'OBenchmark — Icône', url: '../img/obenchmark.png' },
+        { label: 'DirTransfert — Télécharger', url: 'https://github.com/0rmx0/dirtransfert/releases' },
+        { label: 'DirTransfert — Code source', url: 'https://github.com/0rmx0/dirtransfert' },
+        { label: 'DirTransfert — Icône', url: '../img/dirtransfert.png' },
+        { label: 'Frais Réels — Accéder', url: 'https://0rmx0.github.io/frais-reels/' },
+        { label: 'Frais Réels — Code source', url: 'https://github.com/0rmx0/frais-reels' },
+        { label: 'Frais Réels — Icône', url: '../img/frais-reels.png' }
       ],
       audio: { src: '../audio/image.wav', type: 'audio/wav', spectrogram: true }
     }
@@ -158,7 +207,7 @@
     write('');
     writeLines(page.lines);
     write('');
-    write('[1..9] actions de la page   [ÉCHAP] retour au menu');
+    write(page.help || '[1..9] actions de la page   [ÉCHAP] retour au menu');
     if (page.audio) {
       audio.src = page.audio.src;
     }
@@ -276,6 +325,12 @@
         loadGallery(n - 1);
       } else if (page && page.nftGrid && n === 1) {
         loadNftGrid();
+      } else if (page && page.links && n <= page.links.length) {
+        var link = page.links[n - 1];
+        write('');
+        write('Ouverture : ' + link.label + ' → ' + link.url);
+        render();
+        window.open(link.url, '_blank');
       }
     }
   }
