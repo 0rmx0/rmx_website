@@ -4,43 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>R_M_X</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/terminal.css" />
 </head>
 <body>
-  <div id="navigation"></div>
-  <script src="js/nav.js"></script>
-
-  <main>
-  <h1>R_m_X</h1>
-
-  <img src="img/logo_rmx.png" alt="Logo" style="
-  max-width: 100%;
-  max-height: 720px; /* limite la hauteur max */
-  height: auto;      /* garde les proportions */
-  display: block;
-  margin: 0 auto 1em auto;
-  " />
-  <p style="
-    max-width: 90vw;
-    margin: 2em auto;
-    text-align: center;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-  ">
-SnVzdGUgdW4gaHVtYWluIHF1aSBmYWl0IHNlIHF1J2lsIHBldXQgcG91ciBhdm9pciBlbnZpZSBkZSBjZSBsZXZlciBjaGFxdWUgam91ci4=</p>
-</main>
-  <audio id="bg-audio" loop>
-  <source src="audio/image.wav" type="audio/mpeg" />
-</audio>
-
-<script>
-  document.querySelector('h1').addEventListener('click', function () {
-    const audio = document.getElementById('bg-audio');
-    audio.play().catch(err => console.log("Lecture bloquée :", err));
-    // Retire l'écouteur après le premier clic
-    this.removeEventListener('click', arguments.callee);
-  });
-</script>
+  <pre id="terminal" tabindex="0" aria-label="Terminal R_M_X"></pre>
+  <script src="js/terminal.js"></script>
 </body>
 </html>
