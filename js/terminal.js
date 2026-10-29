@@ -75,7 +75,7 @@
     },
     anarchisme: {
       title: 'ANARCHISME',
-      help: '[ENTRÉE] audio caché   [ÉCHAP] retour au menu',
+      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = █████   [ÉCHAP] retour au menu',
       lines: [
         '« Ni Dieu ni maître » — histoire de l\'anarchisme en 4 vidéos :',
         '  Livre 1 - La Volupté de la destruction (1840-1914)',
@@ -90,7 +90,7 @@
     },
     outils: {
       title: 'OUTILS',
-      help: '[1-9] ouvrir un lien   [ENTRÉE] █████   [ÉCHAP] retour au menu',
+      help: '[[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = █████   [ÉCHAP] retour au menu',
       lines: [
         '1. OBenchmark',
         '────────────────────────────────────────',
