@@ -8,6 +8,8 @@
   var view = 'boot';
   var menuIndex = 0;
   var pageIndex = 0;
+  var dynamicLinks = [];
+  var pendingNumber = '';
 
   var LOGO = [
     '██████╗            ███╗   ███╗           ██╗  ██╗',
@@ -29,20 +31,27 @@
   var PAGES = {
     accueil: {
       title: 'ACCUEIL',
+      help: '[1] ouvrir un élément   [ENTRÉE] audio caché   [ÉCHAP] retour au menu',
       lines: [
         'R_M_X — site personnel de 0rmx0.',
         '',
+        '[1] Logo → ../img/logo_rmx.png',
+        '',
         'SnVzdGUgdW4gaHVtYWluIHF1aSBmYWl0IHNlIHF1J2lsIHBldXQgcG91ciBhdm9pciBlbnZpZSBkZSBjZSBsZXZlciBjaGFxdWUgam91ci4='
+      ],
+      links: [
+        { label: 'Logo R_M_X', url: '../img/logo_rmx.png' }
       ],
       audio: { src: '../audio/image.wav', type: 'audio/wav', spectrogram: true }
     },
     lostwave: {
       title: 'LOSTWAVE',
+      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = audio caché   [ÉCHAP] retour au menu',
       lines: [
         'Collection NFT sur Tezos.',
         'Contrat : KT1CpFdy2sDbCBfLv3L6EHpcTfjG8rnXMHPo',
+        'Grille chargée ci-dessous (tzkt.io) :',
         '',
-        '[1] Voir la grille de tuiles NFT (charge via tzkt.io)',
         'w4l0cmFuZ2UgU2Vuc2F0aW9u'
       ],
       audio: { src: '../audio/etrangesensation.mp3', type: 'audio/mpeg', spectrogram: false },
@@ -50,12 +59,14 @@
     },
     galerie: {
       title: 'GALERIE',
+      help: '[A] toutes [B] Street [C] Yggdrasil   [n°] + ENTRÉE = ouvrir   [ENTRÉE] seul = audio   [ÉCHAP] menu',
       lines: [
         'Collections MultiversX : STREET-b10df3, YGGDRSL23-075ceb.',
         '',
-        '[1] Toutes les collections',
-        '[2] Street',
-        '[3] Yggdrasil2023',
+        '[A] Toutes les collections',
+        '[B] Street',
+        '[C] Yggdrasil2023',
+        'Œuvres chargées ci-dessous (api.multiversx.com) :',
         '',
         'bGliZXJ0w6ksIGTDqW1vY3JhdGllLCBwYXJ0YWdlLg=='
       ],
@@ -64,11 +75,21 @@
     },
     anarchisme: {
       title: 'ANARCHISME',
+      help: '[1] ouvrir un élément   [ENTRÉE] audio caché   [ÉCHAP] retour au menu',
       lines: [
-        '« Ni Dieu ni maître » — 4 vidéos (hébergement externe, v1).',
-        'Les fichiers locaux ne sont pas embarqués ; voir la page v1 pour les lire.',
+        '« Ni Dieu ni maître » — histoire de l\'anarchisme en 4 vidéos :',
+        '  Livre 1 - La Volupté de la destruction (1840-1914)',
+        '  Livre 2 - La Mémoire des vaincus (1911-1945)',
+        '  Livre 3 - Des fleurs et des pavés (1944-1969)',
+        '  Livre 4 - Les réseaux de la colère (1965-2012)',
+        '(fichiers trop lourds pour le dépôt — voir la page v1)',
+        '',
+        '[1] Page v1 avec les vidéos → ../anarchisme.html',
         '',
         'TGEgcHJvcHJpw6l0w6ksIGMnZXN0IGxlIHZvbCAh'
+      ],
+      links: [
+        { label: 'Page v1 Anarchisme (vidéos)', url: '../anarchisme.html' }
       ],
       audio: { src: '../audio/ANARCHISME.mp3', type: 'audio/mpeg', spectrogram: false }
     },
@@ -170,7 +191,7 @@
       }
       out += '\n[↑/↓] naviguer   [ENTRÉE] valider   [ÉCHAP] accueil\n';
     } else if (view === 'page') {
-      // le curseur clignotant CSS sert de prompt
+      if (pendingNumber) out += '\n> ' + pendingNumber;
     }
     term.textContent = out;
     term.scrollTop = term.scrollHeight;
@@ -202,6 +223,8 @@
     lastPage = pageKey;
     view = 'page';
     pageIndex = 0;
+    dynamicLinks = [];
+    pendingNumber = '';
     buffer = '';
     write('=== ' + page.title + ' ===');
     write('');
@@ -227,11 +250,11 @@
     return uri.replace(/^ipfs:\/\//, 'https://ipfs.io/ipfs/');
   }
 
-  function randomColor() {
-    var h = Math.floor(Math.random() * 360);
-    var s = 60 + Math.random() * 40;
-    var l = 40 + Math.random() * 20;
-    return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+  function openLink(link) {
+    write('');
+    write('Ouverture : ' + link.label + ' → ' + link.url);
+    render();
+    window.open(link.url, '_blank');
   }
 
   function loadNftGrid() {
@@ -242,17 +265,20 @@
     fetch(url)
       .then(function (res) { return res.json(); })
       .then(function (data) {
-        var count = 0;
+        dynamicLinks = [];
         data.forEach(function (token) {
           var meta = token.metadata || {};
           var uri = meta.artifactUri || meta.displayUri || meta.thumbnailUri;
           if (!uri || uri.indexOf('ipfs://') !== 0) return;
           var link = ipfsToHttp(uri);
-          write('  - ' + (meta.name || token.tokenId) + ' : ' + link);
-          count++;
+          dynamicLinks.push({ label: meta.name || ('NFT #' + token.tokenId), url: link });
         });
         write('');
-        write(count + ' NFT chargée(s). [ENTRÉE] = écouter l\'audio caché.');
+        dynamicLinks.forEach(function (l, i) {
+          write('[' + (i + 1) + '] ' + l.label + ' : ' + l.url);
+        });
+        write('');
+        write(dynamicLinks.length + ' NFT chargée(s). [n°] + ENTRÉE = ouvrir.');
         render();
       })
       .catch(function (err) {
@@ -267,6 +293,7 @@
     render();
     var collections = which === -1 ? MULTIVERSX : [MULTIVERSX[which]];
     var chain = Promise.resolve();
+    dynamicLinks = [];
     collections.forEach(function (c) {
       chain = chain.then(function () {
         return fetch('https://api.multiversx.com/nfts?collection=' + c.id + '&size=1000')
@@ -276,7 +303,9 @@
             write('[' + c.name + '] ' + tokens.length + ' œuvre(s) :');
             tokens.forEach(function (token) {
               var url = token.media && token.media[0] && token.media[0].url;
-              if (url) write('  - ' + (token.name || token.identifier) + ' : ' + url);
+              if (!url) return;
+              dynamicLinks.push({ label: token.name || token.identifier, url: url });
+              write('[' + dynamicLinks.length + '] ' + (token.name || token.identifier) + ' : ' + url);
             });
             render();
           })
@@ -288,7 +317,7 @@
     });
     chain.then(function () {
       write('');
-      write('Galerie chargée. [ENTRÉE] = écouter l\'audio caché.');
+      write('Galerie chargée (' + dynamicLinks.length + ' œuvres). [n°] + ENTRÉE = ouvrir.');
       render();
     });
   }
@@ -316,22 +345,36 @@
   function handlePageKey(e) {
     var page = PAGES[lastPage];
     if (e.key === 'Escape') {
+      pendingNumber = '';
       showMenu();
     } else if (e.key === 'Enter') {
-      if (page && page.audio) playAudio();
-    } else if (/^[1-9]$/.test(e.key)) {
-      var n = parseInt(e.key, 10);
-      if (page && page.gallery && n >= 1 && n <= MULTIVERSX.length) {
-        loadGallery(n - 1);
-      } else if (page && page.nftGrid && n === 1) {
-        loadNftGrid();
-      } else if (page && page.links && n <= page.links.length) {
-        var link = page.links[n - 1];
-        write('');
-        write('Ouverture : ' + link.label + ' → ' + link.url);
-        render();
-        window.open(link.url, '_blank');
+      if (pendingNumber) {
+        var n = parseInt(pendingNumber, 10);
+        pendingNumber = '';
+        if (dynamicLinks[n - 1]) {
+          openLink(dynamicLinks[n - 1]);
+        } else {
+          write('');
+          write('Numéro invalide : ' + n);
+          render();
+        }
+      } else if (page && page.audio) {
+        playAudio();
       }
+    } else if (/^[0-9]$/.test(e.key)) {
+      var d = parseInt(e.key, 10);
+      if (page && page.links && page.links.length && d >= 1 && d <= page.links.length && page.links.length <= 9) {
+        openLink(page.links[d - 1]);
+      } else {
+        pendingNumber = (pendingNumber + e.key).slice(-3);
+        render();
+      }
+    } else if (page && page.gallery && (e.key === 'a' || e.key === 'A')) {
+      loadGallery(-1);
+    } else if (page && page.gallery && (e.key === 'b' || e.key === 'B')) {
+      loadGallery(0);
+    } else if (page && page.gallery && (e.key === 'c' || e.key === 'C')) {
+      loadGallery(1);
     }
   }
 
