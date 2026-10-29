@@ -35,14 +35,14 @@
       lines: [
         'Terminal R_M_X',
         '',
-        '[1] Logo → ../img/logo_rmx.png',
+        '[1] Logo → img/logo_rmx.png',
         '',
         'SnVzdGUgdW4gaHVtYWluIHF1aSBmYWl0IHNlIHF1J2lsIHBldXQgcG91ciBhdm9pciBlbnZpZSBkZSBjZSBsZXZlciBjaGFxdWUgam91ci4='
       ],
       links: [
-        { label: 'Logo R_M_X', url: '../img/logo_rmx.png' }
+        { label: 'Logo R_M_X', url: 'img/logo_rmx.png' }
       ],
-      audio: { src: '../audio/image.wav', type: 'audio/wav', spectrogram: true }
+      audio: { src: 'audio/image.wav', type: 'audio/wav', spectrogram: true }
     },
     lostwave: {
       title: 'LOSTWAVE',
@@ -54,7 +54,7 @@
         '',
         'w4l0cmFuZ2UgU2Vuc2F0aW9u'
       ],
-      audio: { src: '../audio/etrangesensation.mp3', type: 'audio/mpeg', spectrogram: false },
+      audio: { src: 'audio/etrangesensation.mp3', type: 'audio/mpeg', spectrogram: false },
       nftGrid: true
     },
     galerie: {
@@ -70,28 +70,23 @@
         '',
         'bGliZXJ0w6ksIGTDqW1vY3JhdGllLCBwYXJ0YWdlLg=='
       ],
-      audio: { src: '../audio/pp.wav', type: 'audio/wav', spectrogram: true },
+      audio: { src: 'audio/pp.wav', type: 'audio/wav', spectrogram: true },
       gallery: true
     },
     anarchisme: {
       title: 'ANARCHISME',
-      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = █████   [ÉCHAP] retour au menu',
+      help: '[ENTRÉE] audio caché   [ÉCHAP] retour au menu',
       lines: [
         '« Ni Dieu ni maître » — histoire de l\'anarchisme en 4 vidéos :',
         '  Livre 1 - La Volupté de la destruction (1840-1914)',
         '  Livre 2 - La Mémoire des vaincus (1911-1945)',
         '  Livre 3 - Des fleurs et des pavés (1944-1969)',
         '  Livre 4 - Les réseaux de la colère (1965-2012)',
-        '(fichiers trop lourds pour le dépôt — voir la page v1)',
-        '',
-        '[1] Page v1 avec les vidéos → ../anarchisme.html',
+        '(fichiers trop lourds pour le dépôt — vidéos non servies en v2)',
         '',
         'TGEgcHJvcHJpw6l0w6ksIGMnZXN0IGxlIHZvbCAh'
       ],
-      links: [
-        { label: 'Page v1 Anarchisme (vidéos)', url: '../anarchisme.html' }
-      ],
-      audio: { src: '../audio/ANARCHISME.mp3', type: 'audio/mpeg', spectrogram: false }
+      audio: { src: 'audio/ANARCHISME.mp3', type: 'audio/mpeg', spectrogram: false }
     },
     outils: {
       title: 'OUTILS',
@@ -109,7 +104,7 @@
         '',
         '[1] Télécharger → https://github.com/0rmx0/obenchmark/releases',
         '[2] Code source → https://github.com/0rmx0/obenchmark',
-        '[3] Icône       → ../img/obenchmark.png',
+        '[3] Icône       → img/obenchmark.png',
         '',
         '2. DirTransfert',
         '────────────────────────────────────────',
@@ -127,7 +122,7 @@
         '',
         '[4] Télécharger → https://github.com/0rmx0/dirtransfert/releases',
         '[5] Code source → https://github.com/0rmx0/dirtransfert',
-        '[6] Icône       → ../img/dirtransfert.png',
+        '[6] Icône       → img/dirtransfert.png',
         '',
         '3. Frais Réels',
         '────────────────────────────────────────',
@@ -144,22 +139,22 @@
         '',
         '[7] Accéder     → https://0rmx0.github.io/frais-reels/',
         '[8] Code source → https://github.com/0rmx0/frais-reels',
-        '[9] Icône       → ../img/frais-reels.png',
+        '[9] Icône       → img/frais-reels.png',
         '',
         'bGEgamV1bmVzc2UgZW1tZXJkZSBsZSBmcm9udCBuYXRpb25hbA=='
       ],
       links: [
         { label: 'OBenchmark — Télécharger', url: 'https://github.com/0rmx0/obenchmark/releases' },
         { label: 'OBenchmark — Code source', url: 'https://github.com/0rmx0/obenchmark' },
-        { label: 'OBenchmark — Icône', url: '../img/obenchmark.png' },
+        { label: 'OBenchmark — Icône', url: 'img/obenchmark.png' },
         { label: 'DirTransfert — Télécharger', url: 'https://github.com/0rmx0/dirtransfert/releases' },
         { label: 'DirTransfert — Code source', url: 'https://github.com/0rmx0/dirtransfert' },
-        { label: 'DirTransfert — Icône', url: '../img/dirtransfert.png' },
+        { label: 'DirTransfert — Icône', url: 'img/dirtransfert.png' },
         { label: 'Frais Réels — Accéder', url: 'https://0rmx0.github.io/frais-reels/' },
         { label: 'Frais Réels — Code source', url: 'https://github.com/0rmx0/frais-reels' },
-        { label: 'Frais Réels — Icône', url: '../img/frais-reels.png' }
+        { label: 'Frais Réels — Icône', url: 'img/frais-reels.png' }
       ],
-      audio: { src: '../audio/image.wav', type: 'audio/wav', spectrogram: true }
+      audio: { src: 'audio/image.wav', type: 'audio/wav', spectrogram: true }
     }
   };
 
