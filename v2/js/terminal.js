@@ -12,12 +12,12 @@
   var pendingNumber = '';
 
   var LOGO = [
-    '██████╗            ███╗   ███╗           ██╗  ██╗',
-    '██╔══██╗           ████╗ ████║           ╚██╗██╔╝',
-    '██████╔╝           ██╔████╔██║            ╚███╔╝ ',
-    '██╔══██╗           ██║╚██╔╝██║            ██╔██╗ ',
-    '██║  ██║           ██║ ╚═╝ ██║           ██╔╝ ██╗',
-    '╚═╝  ╚═╝           ╚═╝     ╚═╝           ╚═╝  ╚═╝'
+    '██████           ███╗   ██           ██╗  ██╗',
+    '██╔══██╗         ████╗ ████║         ╚██╗██╔╝',
+    '██████╔╝         ██╔████╔██║          ╚███╔╝ ',
+    '██╔══██╗         ██║╚██╔╝██║          ██╔██╗ ',
+    '██║  ██║         ██║ ╚═╝ ██║         ██╔╝ ██╗',
+    '╚═╝  ╚═╝ _______ ╚═╝     ╚═╝ _______ ╚═╝  ╚═╝'
   ];
 
   var MENU = [
@@ -106,6 +106,7 @@
         'séquentielle, IOPS aléatoires). Score normalisé, interface graphique',
         'Slint et export JSON des résultats.',
         'Tags : Rust | Benchmark | Performance | CPU | Memory | Disk | Open-Source',
+        '',
         '[1] Télécharger → https://github.com/0rmx0/obenchmark/releases',
         '[2] Code source → https://github.com/0rmx0/obenchmark',
         '[3] Icône       → ../img/obenchmark.png',
@@ -123,6 +124,7 @@
         'progression en temps réel, ouverture automatique du pare-feu et',
         'redirection UPnP.',
         'Tags : Rust | Transfert | Décentralisé | Chiffrement | TCP | Multiplateforme | UPnP | Open-Source',
+        '',
         '[4] Télécharger → https://github.com/0rmx0/dirtransfert/releases',
         '[5] Code source → https://github.com/0rmx0/dirtransfert',
         '[6] Icône       → ../img/dirtransfert.png',
@@ -139,6 +141,7 @@
         'professionnels, remboursements employeur, mutuelle santé, export des',
         'résultats (TXT/JSON/CSV), barème officiel mis à jour automatiquement.',
         'Tags : JavaScript | Web | Calculateur | Impôts | Frais Réels | Déclaration | Open-Source',
+        '',
         '[7] Accéder     → https://0rmx0.github.io/frais-reels/',
         '[8] Code source → https://github.com/0rmx0/frais-reels',
         '[9] Icône       → ../img/frais-reels.png',
@@ -182,7 +185,7 @@
   function render() {
     var out = buffer;
     if (view === 'boot') {
-      out += '\nR_M_X\n\nPRESS ENTER';
+      out += '\nv2.0.0\n\nPRESS ENTER';
     } else if (view === 'menu') {
       out += '\nSELECTIONNEZ UNE OPTION :\n\n';
       for (var i = 0; i < MENU.length; i++) {
