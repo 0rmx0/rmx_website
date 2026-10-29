@@ -21,7 +21,7 @@
   ];
 
   var MENU = [
-    { key: '1', label: 'ACCUEIL',     page: 'accueil' },
+    { key: '1', label: '#%[]§',     page: 'accueil' },
     { key: '2', label: 'LOSTWAVE',    page: 'lostwave' },
     { key: '3', label: 'GALERIE',     page: 'galerie' },
     { key: '4', label: 'ANARCHISME',  page: 'anarchisme' },
@@ -30,10 +30,10 @@
 
   var PAGES = {
     accueil: {
-      title: 'ACCUEIL',
-      help: '[1] ouvrir un élément   [ENTRÉE] audio caché   [ÉCHAP] retour au menu',
+      title: '#%[]§',
+      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = █████   [ÉCHAP] retour au menu',
       lines: [
-        'R_M_X — site personnel de 0rmx0.',
+        'Terminal R_M_X',
         '',
         '[1] Logo → ../img/logo_rmx.png',
         '',
@@ -46,7 +46,7 @@
     },
     lostwave: {
       title: 'LOSTWAVE',
-      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = audio caché   [ÉCHAP] retour au menu',
+      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = █████   [ÉCHAP] retour au menu',
       lines: [
         'Collection NFT sur Tezos.',
         'Contrat : KT1CpFdy2sDbCBfLv3L6EHpcTfjG8rnXMHPo',
@@ -59,7 +59,7 @@
     },
     galerie: {
       title: 'GALERIE',
-      help: '[A] toutes [B] Street [C] Yggdrasil   [n°] + ENTRÉE = ouvrir   [ENTRÉE] seul = audio   [ÉCHAP] menu',
+      help: '[A] toutes [B] Street [C] Yggdrasil   [n°] + ENTRÉE = ouvrir   [ENTRÉE] seul = █████   [ÉCHAP] menu',
       lines: [
         'Collections MultiversX : STREET-b10df3, YGGDRSL23-075ceb.',
         '',
@@ -75,7 +75,7 @@
     },
     anarchisme: {
       title: 'ANARCHISME',
-      help: '[1] ouvrir un élément   [ENTRÉE] audio caché   [ÉCHAP] retour au menu',
+      help: '[n°] + ENTRÉE = ouvrir l\'élément   [ENTRÉE] seul = █████   [ÉCHAP] retour au menu',
       lines: [
         '« Ni Dieu ni maître » — histoire de l\'anarchisme en 4 vidéos :',
         '  Livre 1 - La Volupté de la destruction (1840-1914)',
@@ -95,7 +95,7 @@
     },
     outils: {
       title: 'OUTILS',
-      help: '[1-9] ouvrir un lien   [ENTRÉE] audio caché   [ÉCHAP] retour au menu',
+      help: '[1-9] ouvrir un lien   [ENTRÉE] █████   [ÉCHAP] retour au menu',
       lines: [
         '1. OBenchmark',
         '────────────────────────────────────────',
