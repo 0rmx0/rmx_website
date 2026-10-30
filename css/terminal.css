@@ -74,3 +74,15 @@ body.fatal #terminal {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.55; }
 }
+
+body.void,
+body.void #terminal {
+  background: #000;
+  color: #000;
+  text-shadow: none;
+}
+
+body.void #terminal::after {
+  content: none;
+  animation: none;
+}

@@ -159,6 +159,14 @@
         { label: 'Frais Réels — Icône', url: 'img/frais-reels.png' }
       ],
       audio: { src: 'audio/image.wav', type: 'audio/wav', spectrogram: true }
+    },
+    blackhole: {
+      title: 'BLACKHOLE',
+      help: 'INSTALLATION EN COURS — NE PAS INTERROMPRE',
+      lines: [
+        'Lancement automatique de l’installation de l’IA...'
+      ],
+      blackhole: true
     }
   };
 
@@ -242,6 +250,7 @@
     render();
     if (page.nftGrid) loadNftGrid();
     if (page.gallery) loadGallery(-1);
+    if (page.blackhole) runBlackhole();
   }
 
   function playAudio() {
@@ -271,6 +280,71 @@
     write('');
     write('! SIGNAL INSTABLE [' + glitchCount + '/' + GLITCH_MAX + '] !');
     render();
+  }
+
+  var BH_KEY = 'rmx_blackhole_crashed';
+
+  var BH_PHASES = [
+    { at: 0,    lines: ['> initialisation du noyau...', '> chargement des poids : 0%'] },
+    { at: 900,  lines: ['> chargement des poids : 12%', '> allocation mémoire : 4.2 To / 128 To'] },
+    { at: 1800, lines: ['> chargement des poids : 31%', '> compilation des shaders... OK'] },
+    { at: 2700, lines: ['> chargement des poids : 47%', '> montage du système de fichiers racine... OK'] },
+    { at: 3600, lines: ['> chargement des poids : 63%', '> connexion au bus neural... OK'] },
+    { at: 4500, lines: ['> chargement des poids : 78%', '> synchronisation des miroirs... OK'] },
+    { at: 5400, lines: ['> chargement des poids : 91%', '> écriture du manifeste final...'] },
+    { at: 6200, lines: ['> chargement des poids : 100%', '> démarrage du processus...'] },
+    { at: 7200, lines: ['ALERTE : température du noyau critique', 'ALERTE : fuite mémoire détectée (12.8 Go/s)'] },
+    { at: 8400, lines: ['ALERTE : horloge interne désynchronisée', 'ALERTE : 3 processus fantômes détectés'] },
+    { at: 9600, lines: ['ERREUR : checksum du noyau invalide', 'ERREUR : impossible de relire /dev/mind'] },
+    { at: 10800, lines: ['ERREUR : boucle de rétroaction détectée', 'ERREUR : le modèle rêve éveillé'] },
+    { at: 12000, lines: ['ERREUR FATALE : effondrement du noyau', '> extinction des processus...'] }
+  ];
+
+  var bhTimers = [];
+
+  function bhClear() {
+    bhTimers.forEach(clearTimeout);
+    bhTimers = [];
+  }
+
+  function bhGlitchBurst() {
+    document.body.classList.add('glitch');
+    var n = 120 + Math.floor(Math.random() * 180);
+    bhTimers.push(setTimeout(function () { document.body.classList.remove('glitch'); }, n));
+  }
+
+  function bhScramble() {
+    var chars = '█▓▒░<>/\\|#@%&$01\u00c9\u00c8\u00d9';
+    var text = '';
+    for (var i = 0; i < 400; i++) text += chars[Math.floor(Math.random() * chars.length)];
+    write(text);
+    render();
+  }
+
+  function bhCrash() {
+    bhClear();
+    document.body.classList.remove('glitch');
+    document.body.classList.add('fatal');
+    buffer = '';
+    view = 'dead';
+    term.textContent = '';
+    try { localStorage.setItem(BH_KEY, '1'); } catch (e) {}
+    document.body.classList.add('void');
+  }
+
+  function runBlackhole() {
+    bhClear();
+    BH_PHASES.forEach(function (phase, i) {
+      bhTimers.push(setTimeout(function () {
+        if (i >= 8) bhGlitchBurst();
+        if (i >= 10) bhScramble();
+        writeLines(phase.lines);
+        render();
+      }, phase.at));
+    });
+    bhTimers.push(setTimeout(function () { bhGlitchBurst(); }, 12600));
+    bhTimers.push(setTimeout(function () { bhGlitchBurst(); bhScramble(); }, 13200));
+    bhTimers.push(setTimeout(bhCrash, 14000));
   }
 
   function ipfsToHttp(uri) {
@@ -409,6 +483,10 @@
   }
 
   document.addEventListener('keydown', function (e) {
+    if (view === 'dead') {
+      e.preventDefault();
+      return;
+    }
     if (view === 'boot') {
       if (e.key === 'Enter') {
         booted = true;
@@ -442,6 +520,14 @@
     }
   }
 
-  boot();
+  var crashed = false;
+  try { crashed = localStorage.getItem(BH_KEY) === '1'; } catch (e) {}
+  if (crashed) {
+    view = 'dead';
+    document.body.classList.add('void');
+    term.textContent = '';
+  } else {
+    boot();
+  }
   term.focus();
 })();
