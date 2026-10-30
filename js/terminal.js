@@ -10,6 +10,10 @@
   var pageIndex = 0;
   var dynamicLinks = [];
   var pendingNumber = '';
+  var glitchCount = 0;
+  var glitchTimer = null;
+  var fatal = false;
+  var GLITCH_MAX = 10;
 
   var LOGO = [
     '██████           ███╗   ██           ██╗  ██╗',
@@ -223,6 +227,9 @@
     pageIndex = 0;
     dynamicLinks = [];
     pendingNumber = '';
+    glitchCount = 0;
+    fatal = false;
+    document.body.classList.remove('glitch', 'fatal');
     buffer = '';
     write('=== ' + page.title + ' ===');
     write('');
@@ -242,6 +249,28 @@
       write('');
       write('LECTURE BLOQUÉE PAR LE NAVIGATEUR : ' + err.message);
     });
+  }
+
+  function triggerGlitch() {
+    glitchCount++;
+    document.body.classList.add('glitch');
+    if (glitchTimer) clearTimeout(glitchTimer);
+    if (glitchCount >= GLITCH_MAX) {
+      fatal = true;
+      document.body.classList.remove('glitch');
+      document.body.classList.add('fatal');
+      write('');
+      write('ERREUR FATALE : SIGNAL PERDU (0x' + glitchCount.toString(16).toUpperCase() + ')');
+      write('AUCUNE RÉPONSE POSSIBLE. RAFRAÎCHISSEZ LA PAGE (F5).');
+      render();
+      return;
+    }
+    glitchTimer = setTimeout(function () {
+      document.body.classList.remove('glitch');
+    }, 350);
+    write('');
+    write('! SIGNAL INSTABLE [' + glitchCount + '/' + GLITCH_MAX + '] !');
+    render();
   }
 
   function ipfsToHttp(uri) {
@@ -341,6 +370,7 @@
   }
 
   function handlePageKey(e) {
+    if (fatal) return;
     var page = PAGES[lastPage];
     if (e.key === 'Escape') {
       pendingNumber = '';
@@ -356,6 +386,8 @@
           write('Numéro invalide : ' + n);
           render();
         }
+      } else if (lastPage === 'outils') {
+        triggerGlitch();
       } else if (page && page.audio) {
         playAudio();
       }
@@ -398,7 +430,7 @@
 
   term.addEventListener('click', function () {
     term.focus();
-    if (view === 'page') playAudioOnce();
+    if (view === 'page' && !fatal) playAudioOnce();
   });
 
   var audioPlayed = false;
