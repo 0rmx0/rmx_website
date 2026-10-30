@@ -28,8 +28,8 @@ Pages : `index.html`, `lostwave.html` (NFT Tezos, contrat `KT1CpFdy2sDbCBfLv3L6E
 
 Bugs connus à corriger (Phase 1 du plan) :
 1. `anarchisme.html` référence 4 vidéos dans `video/` qui **n'existe pas** (revert git) → page cassée.
-   **[DÉCISION OWNER]** Ces vidéos font plusieurs Go : v1 en `video-embed` (hébergement
-   externe type YouTube non listé / Peertube), évolution pinning/décentralisé plus tard.
+   **[DÉCISION OWNER]** Vidéos de plusieurs Go hébergées sur **IPFS** (CIDv1, raw-leaves,
+   épinglées par le owner) : la page v2 les sert via `ipfs:<cid>` + gateways publics.
    Ne pas recompresser sans vérifier d'éventuels éléments cachés dans l'audio.
 2. `lostwave.html` : base64 corrompu (`w4l0cmFuZ2U...` → devrait décoder « Étrange Sensation »).
 3. `nftgallery.html` : base64 avec coquille (décodage : « libertÉ, dÑmocratie, partage »).
@@ -116,10 +116,9 @@ Types de blocs prévus (le renderer ne sait rendre QUE ces types ; prévoir gén
 - `nft-gallery` : `{chain, collection, filter:true}` — galerie
 - `video-frame` : `{source, aspect:"16/9"}`
 - `video-embed` : `{provider, video_id, aspect:"16/9"}` — YouTube/Peertube/URL externe.
-  **[DÉCISION OWNER]** v1 du site : les vidéos de la page Anarchisme en `video-embed`
-  (elles font plusieurs Go, trop lourdes pour Arweave/GitHub). Évolution possible plus
-  tard : pinning IPFS ou autre hébergement décentralisé → le contrat étant la source de
-  vérité, changer d'hébergeur = une transaction, pas une refonte.
+- `video-frame` : `{source, aspect:"16/9"}` — vidéo décentralisée ; la page Anarchisme
+  l'utilise avec `source: "ipfs:<cid>"` (4 vidéos « Ni Dieu ni maître », CIDs épinglés
+  par le owner ; le renderer retombe sur plusieurs gateways publics).
 - `game-embed` : `{source, engine:"rpgmaker", mode:"iframe"}` — **[À DÉFINIR PLUS TARD]**
   le jeu RPG Maker n'existe pas encore ; type prévu pour le jour où il existera.
 - `project-list` : `{projects:[{name, description, url, status:"wip"|"done"|"abandonné"}]}`
