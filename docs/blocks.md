@@ -1,8 +1,13 @@
 # docs/blocks.md — Ontologie des blocs (Phase 0) [FIGÉ v1]
 
-Ce document est le **contrat partagé** entre le smart contract `SiteStructure` (Tezos)
-et le renderer `js/runtime.js`. Chaque bloc d'une page est une instance d'un type décrit
-ici. Le renderer ne sait rendre QUE ces types ; le contrat ne doit valider QUE ces types.
+> **Décision owner (2026-10-30)** : le volet web3 (smart contract Tezos, Arweave, contrat
+> de structure) est **abandonné** (voir AGENTS.md §3/§4). Ce document reste une référence
+> d'ontologie pour décrire le contenu du site statique, pas un schéma de contrat.
+
+Chaque bloc d'une page du site est une instance d'un type décrit ici. Historiquement ce
+document était le contrat partagé entre un smart contract `SiteStructure` (Tezos) et un
+renderer `js/runtime.js` ; ce volet est abandonné (AGENTS.md §3/§4) — le site actuel est
+rendu directement par `js/terminal.js` (100 % client).
 
 Règle d'évolution : ajouter un type de bloc = mettre à jour le renderer = republier les
 miroirs (l'unique cas de republication). Modifier les *champs* d'un type existant est
