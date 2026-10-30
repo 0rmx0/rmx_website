@@ -40,12 +40,12 @@
       lines: [
         'Terminal R_M_X',
         '',
-        '[1] Logo → img/logo_rmx.png',
+        '[1] Mask → img/mask.png',
         '',
         'SnVzdGUgdW4gaHVtYWluIHF1aSBmYWl0IHNlIHF1J2lsIHBldXQgcG91ciBhdm9pciBlbnZpZSBkZSBjZSBsZXZlciBjaGFxdWUgam91ci4='
       ],
       links: [
-        { label: 'Logo R_M_X', url: 'img/logo_rmx.png' }
+        { label: 'R_M_X', url: 'img/mask.jpg' }
       ],
       audio: { src: 'audio/image.wav', type: 'audio/wav', spectrogram: true }
     },
