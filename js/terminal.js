@@ -87,9 +87,15 @@
         '  Livre 2 - La Mémoire des vaincus (1911-1945)',
         '  Livre 3 - Des fleurs et des pavés (1944-1969)',
         '  Livre 4 - Les réseaux de la colère (1965-2012)',
-        '(fichiers trop lourds pour le dépôt — vidéos non servies en v2)',
+        '(hébergées sur IPFS — [n°] = lire la vidéo via gateway public)',
         '',
         'TGEgcHJvcHJpw6l0w6ksIGMnZXN0IGxlIHZvbCAh'
+      ],
+      videos: [
+        { label: 'Livre 1 - La Volupté de la destruction (1840-1914)', cid: 'bafybeihkkedpdeuabx7mqks2a4sxpib5c7hrgn3aurlcquypmlqmr7euey' },
+        { label: 'Livre 2 - La Mémoire des vaincus (1911-1945)', cid: 'bafybeicobplzcfyxzchcco5gglrz63n3lcs3m5z5ix3ui3facof6zz2uxe' },
+        { label: 'Livre 3 - Des fleurs et des pavés (1944-1969)', cid: 'bafybeiecbrwzuruu6x5dbxz4pto257agufgygncizlyvhxgzm6qkvmyeyy' },
+        { label: 'Livre 4 - Les réseaux de la colère (1965-2012)', cid: 'bafybeiazmwnioaeev3rii3mliwrzo7dzvxhrr6xf5dzgvjuhjxochlmbvu' }
       ],
       audio: { src: 'audio/ANARCHISME.mp3', type: 'audio/mpeg', spectrogram: false }
     },
@@ -251,6 +257,7 @@
     render();
     if (page.nftGrid) loadNftGrid();
     if (page.gallery) loadGallery(-1);
+    if (page.videos) listVideos(page);
     if (page.blackhole) runBlackhole();
   }
 
@@ -350,6 +357,28 @@
 
   function ipfsToHttp(uri) {
     return uri.replace(/^ipfs:\/\//, 'https://ipfs.io/ipfs/');
+  }
+
+  var IPFS_GATEWAYS = ['https://ipfs.io/ipfs/', 'https://dweb.link/ipfs/', 'https://cloudflare-ipfs.com/ipfs/'];
+
+  function ipfsGateways(cid) {
+    return IPFS_GATEWAYS.map(function (g) { return g + cid; });
+  }
+
+  function listVideos(page) {
+    write('');
+    page.videos.forEach(function (v, i) {
+      var link = { label: 'Vidéo ' + (i + 1) + ' — ' + v.label, url: ipfsGateways(v.cid)[0] };
+      dynamicLinks.push(link);
+      write('[' + (i + 1) + '] ' + link.label);
+      write('    ipfs://' + v.cid);
+      ipfsGateways(v.cid).forEach(function (gw, gi) {
+        write('    gateway ' + (gi + 1) + ' : ' + gw);
+      });
+    });
+    write('');
+    write(page.videos.length + ' vidéo(s) sur IPFS. [n°] + ENTRÉE = ouvrir.');
+    render();
   }
 
   function openLink(link) {
