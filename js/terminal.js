@@ -271,7 +271,7 @@
       document.body.classList.add('fatal');
       write('');
       write('ERREUR FATALE : SIGNAL PERDU (0x' + glitchCount.toString(16).toUpperCase() + ')');
-      write('AUCUNE RÉPONSE POSSIBLE. RAFRAÎCHISSEZ LA PAGE (F5).');
+      write('AUCUNE RÉPONSE POSSIBLE.');
       render();
       return;
     }
