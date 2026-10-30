@@ -29,7 +29,8 @@
     { key: '2', label: 'LOSTWAVE',    page: 'lostwave' },
     { key: '3', label: 'GALERIE',     page: 'galerie' },
     { key: '4', label: 'ANARCHISME',  page: 'anarchisme' },
-    { key: '5', label: 'OUTILS',      page: 'outils' }
+    { key: '5', label: 'OUTILS',      page: 'outils' },
+    { key: '6', label: 'BLACKHOLE',   page: 'blackhole' }
   ];
 
   var PAGES = {
