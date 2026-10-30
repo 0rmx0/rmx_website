@@ -44,3 +44,45 @@ html, body {
 @keyframes blink {
   50% { opacity: 0; }
 }
+
+body.glitch #terminal {
+  animation: glitch-shake 0.35s steps(2) 1;
+  color: #ff3355;
+  text-shadow: 2px 0 #33ff66, -2px 0 #00ccff, 0 0 12px rgba(255, 51, 85, 0.8);
+}
+
+@keyframes glitch-shake {
+  0% { transform: translate(0, 0) skewX(0deg); }
+  20% { transform: translate(-6px, 3px) skewX(-4deg); }
+  40% { transform: translate(5px, -4px) skewX(3deg); }
+  60% { transform: translate(-4px, -2px) skewX(-2deg); }
+  80% { transform: translate(6px, 2px) skewX(5deg); }
+  100% { transform: translate(0, 0) skewX(0deg); }
+}
+
+body.fatal {
+  background: #1a0505;
+}
+
+body.fatal #terminal {
+  color: #ff2233;
+  text-shadow: 0 0 10px rgba(255, 34, 51, 0.9);
+  animation: fatal-flicker 0.8s steps(2) infinite;
+}
+
+@keyframes fatal-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+body.void,
+body.void #terminal {
+  background: #000;
+  color: #000;
+  text-shadow: none;
+}
+
+body.void #terminal::after {
+  content: none;
+  animation: none;
+}
