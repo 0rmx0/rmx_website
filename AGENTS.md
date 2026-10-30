@@ -3,14 +3,16 @@
 Ce fichier est le contexte de référence pour tout agent (IA ou humain) travaillant sur ce dépôt.
 **Le lire en entier avant toute action.** Il reflète les décisions prises avec le propriétaire
 (auteur = owner). Ne pas contredire les décisions marquées [FIGÉ].
+Dernière mise à jour : v2 du site (terminal AS/400 monopage, 2026-10-30).
 
 ## 1. Nature du projet
 
 Site personnel de **R_M_X** (0rmx0) : site statique d'art numérique, thématiques
-lostwave / anarchisme / NFT. Esthétique : messages cachés (base64), audios cachés
-(déclenchés au clic sur le `<h1>`), **images stéganographiées dans les spectrogrammes
-des fichiers `.wav`** (`audio/image.wav`, `audio/pp.wav` — vérifié, ce sont des
-spectrogrammes à la Aphex Twin).
+lostwave / anarchisme / NFT. Depuis la v2, le site est une **interface terminal façon
+AS/400 monopage** (navigation 100 % clavier). Esthétique : messages cachés (base64),
+audios déclenchés au clic / sur ENTRÉE, glitchs, page BLACKHOLE (crash fictif persisté),
+**images stéganographiées dans les spectrogrammes des fichiers `.wav`**
+(`audio/image.wav`, `audio/pp.wav` — vérifié, ce sont des spectrogrammes à la Aphex Twin).
 
 Langue de travail : **français** (avec le owner). Code et commentaires : français accepté.
 
@@ -19,35 +21,45 @@ le temps a effacé. Le NFT est utilisé pour la **décentralisation du contenu, 
 propriété** (le paradoxe avec « La propriété, c'est le vol ! » est assumé : les NFT
 servent de containers de contenu décentralisés / CDN communautaire).
 
-## 2. État actuel du site (analyse faite)
+## 2. État actuel du site (v2 terminal, analyse faite)
 
-Pages : `index.html`, `lostwave.html` (NFT Tezos, contrat `KT1CpFdy2sDbCBfLv3L6EHpcTfjG8rnXMHPo`),
-`nftgallery.html` (NFT MultiversX, collections `STREET-b10df3`, `YGGDRSL23-075ceb`),
-`anarchisme.html`. CSS : `css/style.css`, police `fonts/HelpMe.woff2`. JS : `js/lostwave.js`,
-`js/nftgallery.js`.
+Un seul fichier servi : `index.html` + `css/terminal.css` + `js/terminal.js` (toute la
+logique — menu, pages, liens, audios, glitchs — en IIFE vanilla). Police `fonts/HelpMe.woff2`.
+Assets : `img/` (mask.jpg = image d'accueil cliquable, grain.png = texture de fond,
+logo_rmx.png, icônes des outils), `audio/` (image.wav, pp.wav = spectrogrammes ;
+etrangesensation.mp3, ANARCHISME.mp3 = musique), `docs/blocks.md`.
 
-Bugs connus à corriger (Phase 1 du plan) :
-1. `anarchisme.html` référence 4 vidéos dans `video/` qui **n'existe pas** (revert git) → page cassée.
-   **[DÉCISION OWNER]** Ces vidéos font plusieurs Go : v1 en `video-embed` (hébergement
-   externe type YouTube non listé / Peertube), évolution pinning/décentralisé plus tard.
-   Ne pas recompresser sans vérifier d'éventuels éléments cachés dans l'audio.
-2. `lostwave.html` : base64 corrompu (`w4l0cmFuZ2U...` → devrait décoder « Étrange Sensation »).
-3. `nftgallery.html` : base64 avec coquille (décodage : « libertÉ, dÑmocratie, partage »).
-4. Les `.wav` sont déclarés `type="audio/mpeg"` → corriger en `audio/wav`.
-5. `logo_rmx.png` = 1,3 Mo → à compresser.
-6. `ANARCHISME.mp3` = 23 Mo ; **vérifier son spectrogramme avant gravure** (le mp3 lossy
-   a pu détruire une éventuelle image cachée).
-7. Script audio-clic dupliqué ×4 avec `arguments.callee` (obsolète).
+Menu (6 entrées, navigation 100 % clavier : [↑/↓] + ENTRÉE, ÉCHAP = retour) :
+[1] `#%[]§` accueil · [2] LOSTWAVE · [3] GALERIE · [4] ANARCHISME · [5] OUTILS · [6] BLACKHOLE.
+Liens numérotés ouvrables sur chaque page (`[n°] + ENTRÉE`). Audios en loop déclenchés
+au clic ou sur ENTRÉE. OUTILS : ENTRÉE seul déclenche un glitch, erreur fatale à la 10e.
+BLACKHOLE : fausse installation d'IA puis crash définitif persisté (localStorage).
+
+NFT : lostwave = Tezos, contrat `KT1CpFdy2sDbCBfLv3L6EHpcTfjG8rnXMHPo` (via api.tzkt.io) ;
+galerie = MultiversX, collections `STREET-b10df3`, `YGGDRSL23-075ceb` (via api.multiversx.com).
+
+Bugs connus / points ouverts :
+1. Page ANARCHISME : les 4 vidéos (plusieurs Go) ne sont **pas servies** en v2.
+   **[DÉCISION OWNER]** v1 future : `video-embed` (hébergement externe type YouTube non
+   listé / Peertube), évolution pinning/décentralisé plus tard. Ne pas recompresser sans
+   vérifier d'éventuels éléments cachés dans l'audio.
+2. `img/logo_rmx.png` = 1,3 Mo (inutilisé en v2) et `img/mask.jpg` = 3,8 Mo → à compresser.
+3. `audio/ANARCHISME.mp3` = 23 Mo — **[DÉCISION OWNER, figée dans docs/blocks.md]** les mp3
+   sont de la vraie musique, sans image spectrogramme → recompression libre.
+
+Les anciens bugs de la v1 (base64 corrompus ×2, MIME des `.wav`, `arguments.callee`) sont
+résolus par la v2.
 
 **RÈGLE CRITIQUE — fichiers audio :** ne JAMAIS convertir/recompresser les `.wav`
-(lossy = destruction des images spectrogramme). Le format wav 16-bit est voulu.
-Le seul fix autorisé : le type MIME dans le HTML.
+`image.wav` / `pp.wav` (lossy = destruction des images spectrogramme). Le format wav 16-bit
+est voulu.
 
-Messages base64 décodés (contexte, ne pas « réparer » le principe) :
-- index : « Juste un humain qui fait se qu'il peut pour avoir envie de ce lever chaque jour. »
+Messages base64 actuels (décodés, contexte — ne pas « réparer » le principe) :
+- accueil : « Juste un humain qui fait se qu'il peut pour avoir envie de ce lever chaque jour. »
+- lostwave : « Étrange Sensation » (corrigé en v2)
+- galerie : « liberté, démocratie, partage. » (corrigé en v2)
 - anarchisme : « La propriété, c'est le vol ! »
-- galerie : « liberté, démocratie, partage. » (coquille à corriger)
-- lostwave : « Étrange Sensation » (corrompu, à corriger)
+- outils : « la jeunesse emmerde le front national »
 
 ## 3. Objectif principal [FIGÉ]
 
@@ -104,16 +116,19 @@ l'**history** dit ce qui a existé. Supprimer une page = par défaut la retirer 
 seulement (option douce) ; elle reste dans le storage et les snapshots. Une page peut être
 publiée sans être au menu = page cachée (easter egg, cohérent avec l'esthétique).
 
-## 6. Ontologie des blocs [à figer en Phase 0 — docs/blocks.md]
+## 6. Ontologie des blocs [FIGÉ en Phase 0 — docs/blocks.md]
 
-Types de blocs prévus (le renderer ne sait rendre QUE ces types ; prévoir généreusement) :
+**Phase 0 figée dans `docs/blocks.md` (v1, 12 types)** — ce fichier est la référence exacte
+(champs, `lossless`, sources `arweave:`/`ipfs:`/`local:`/`http…`, champ `hidden`). Résumé :
 - `heading` : `{text}`
 - `text` : `{text}` (base64 supporté)
 - `hidden-text` : `{encoding:"base64", text}` — messages cachés actuels
 - `image` : `{source, alt, style}` — source = tx-id Arweave / CID
-- `audio-spectro` : `{source, trigger:"heading-click"}` — les wav cachés
+- `audio-spectro` : `{source, trigger:"heading-click", loop, lossless}` — les audios cachés.
+  **[DÉCISION OWNER]** `lossless:true` = wav/flac portant une image spectrogramme (jamais
+  recompresser) ; `lossless:false` (défaut) = vraie musique, mp3 accepté.
 - `nft-grid` : `{chain, contract, render:"color-tiles"}` — lostwave
-- `nft-gallery` : `{chain, collection, filter:true}` — galerie
+- `nft-gallery` : `{chain, collections:[...], filter:true}` — galerie
 - `video-frame` : `{source, aspect:"16/9"}`
 - `video-embed` : `{provider, video_id, aspect:"16/9"}` — YouTube/Peertube/URL externe.
   **[DÉCISION OWNER]** v1 du site : les vidéos de la page Anarchisme en `video-embed`
@@ -134,7 +149,11 @@ par transaction.
 Règle : ajouter un nouveau type de bloc = mettre à jour le renderer = republier les
 miroirs (l'unique cas où les miroirs doivent être redéployés).
 
-## 7. Renderer `js/runtime.js` (vanilla JS, remplace nftgallery.js/lostwave.js)
+## 7. Renderer `js/runtime.js` (vanilla JS, remplacera à terme `terminal.js`)
+
+La v2 actuelle (`js/terminal.js`, données en dur dans `MENU`/`PAGES`) en est la
+préfiguration vivante : c'est la référence de rendu (menu, pages, liens numérotés,
+audios, glitch, blackhole).
 
 - `readStructure(contract)` : RPC public Tezos, **gratuit, sans wallet**, fallbacks RPC multiples
 - `renderMenu(menu)`, `renderPage(pageKey)` : routing **hash** (`index.html#lostwave`,
@@ -143,8 +162,7 @@ miroirs (l'unique cas où les miroirs doivent être redéployés).
   `ipfs.io`/`dweb.link` → miroir GitHub)
 - **Mode dégradé** : `snapshot.json` embarqué au build → le site marche même si Tezos
   est injoignable
-- Réutilise les patterns existants de `js/nftgallery.js` et `js/lostwave.js` (tzkt,
-  api.multiversx.com, ipfs→http)
+- Réutilise les patterns de `js/terminal.js` (tzkt, api.multiversx.com, ipfs→http)
 
 ## 8. Pipeline (CLI Node)
 
@@ -159,11 +177,13 @@ serveur du owner (ni son IP ni termrx.ovh).**
 
 ## 9. Plan d'action (ordre des phases)
 
-- **Phase 0** : figer l'ontologie → `docs/blocks.md` [à faire]
-- **Phase 1** : nettoyage du site (bugs listés §2) [à faire]
+- **Phase 0** : figer l'ontologie → `docs/blocks.md` [FAIT — PR #4, figé v1]
+- **Phase 1** : nettoyage du site — la v2 terminal a livré le site monopage (PR #8, #9) ;
+  reste : vidéos Anarchisme en `video-embed`, compression des images lourdes (§2) [partiel]
 - **Phase 2** : contrat `contracts/site_structure.py` + tests simulation SmartPy [à faire]
 - **Phase 3** : `js/runtime.js` — reconstruire le site actuel à l'identique depuis un
-  JSON en dur (preuve du pattern avant déploiement) [à faire]
+  JSON en dur (preuve du pattern avant déploiement) [à faire — `terminal.js` en est la
+  préfiguration]
 - **Phase 4** : pipeline CLI [à faire]
 - **Phase 5** : `admin.html` (Beacon) [à faire]
 - **Phase 6** : Ghostnet (testnet gratuit) → puis mainnet (~1-2 XTZ frais, ~5 AR,
@@ -172,6 +192,8 @@ serveur du owner (ni son IP ni termrx.ovh).**
 
 Livraison : une branche `vibe/*` + PR par phase. L'agent peut livrer Phases 0-5 testées
 en simulation ; les transactions mainnet (Phase 6) appartiennent au owner.
+Note : la PR #5 (pivot « site statique sur serveur perso », abandon du web3) a été
+**fermée sans merge** → l'architecture Variante A (§4) tient.
 
 ## 10. Critères de succès
 
@@ -186,6 +208,8 @@ en simulation ; les transactions mainnet (Phase 6) appartiennent au owner.
 
 - Site statique, vanilla JS, zéro framework, zéro build lourd — garder cette nudité
   (c'est un choix esthétique assumé, « HTML brut lo-fi »).
+- Toute la logique de la v2 est dans `js/terminal.js` : menu dans `MENU`, pages dans
+  `PAGES`. Ajouter une page = une entrée dans `PAGES` + une entrée dans `MENU`.
 - Ne pas ajouter de dépendances sans accord du owner.
 - Ne pas révéler/casser les couches cachées (base64, audios au clic, spectrogrammes) :
   les préserver, éventuellement les enrichir d'indices (ex : commentaire HTML invitant
@@ -197,5 +221,7 @@ en simulation ; les transactions mainnet (Phase 6) appartiennent au owner.
 
 ## 12. Glossaire owner
 
-- Les audios cachés = intentionnel, ne pas en faire des bugs.
-- Les messages base64 = intentionnels, sauf les 2 corrompus listés §2.
+- Les audios cachés = intentionnels, ne pas en faire des bugs.
+- Les messages base64 = intentionnels (les 2 ex-corrompus sont corrigés en v2, liste §2).
+- Le glitch d'OUTILS (ENTRÉE seul, fatal à la 10e tentative) et la page BLACKHOLE
+  (crash persisté en localStorage) = intentionnels, ne pas « corriger ».
