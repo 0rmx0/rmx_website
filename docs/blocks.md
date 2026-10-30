@@ -99,11 +99,12 @@ Vidéo auto-hébergée (fichier `<video>` natif).
 { "type": "video-frame", "source": "arweave:<tx-id>", "aspect": "16/9" }
 ```
 Champs : `source` (requis), `aspect` (optionnel, défaut `"16/9"`).
-**Règle de sizing** : uniquement pour fichiers < ~20 Mo ; au-delà → `video-embed`.
+**Règle de sizing** : pour une source `arweave:` uniquement, fichier < ~20 Mo ; au-delà →
+`video-embed`. Une source `ipfs:<cid>` est un pointeur (contenu épinglé ailleurs) : pas de
+limite de taille — c'est le cas des 4 vidéos de la page Anarchisme.
 
 ### 9. `video-embed`
-Vidéo hébergée à l'extérieur (iframe provider). **[DÉCISION OWNER]** v1 : les vidéos
-de la page Anarchisme (plusieurs Go) passent par ce type.
+Vidéo hébergée à l'extérieur (iframe provider).
 ```json
 { "type": "video-embed", "provider": "youtube", "video_id": "dQw4w9WgXcQ", "aspect": "16/9" }
 ```
@@ -158,7 +159,11 @@ lostwave   : [heading, nft-grid (tezos KT1Cp…),
               hidden-text (base64 "Étrange Sensation" — à corriger en Phase 1)]
 nftgallery : [heading, nft-gallery (multiversx, STREET-b10df3 + YGGDRSL23-075ceb),
               audio-spectro (pp.wav), hidden-text (base64 corrigé)]
-anarchisme : [heading, 4 × video-embed (décision owner v1),
+anarchisme : [heading, 4 × video-frame (source `ipfs:<cid>` — pinning IPFS owner,
+              URLs : bafybeihkkedpdeuabx7mqks2a4sxpib5c7hrgn3aurlcquypmlqmr7euey,
+              bafybeicobplzcfyxzchcco5gglrz63n3lcs3m5z5ix3ui3facof6zz2uxe,
+              bafybeiecbrwzuruu6x5dbxz4pto257agufgygncizlyvhxgzm6qkvmyeyy,
+              bafybeiazmwnioaeev3rii3mliwrzo7dzvxhrr6xf5dzgvjuhjxochlmbvu),
               audio-spectro (ANARCHISME.mp3, lossless:false — vraie musique),
               hidden-text ("La propriété, c'est le vol !")]
 ```

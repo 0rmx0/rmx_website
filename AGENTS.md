@@ -50,6 +50,29 @@ Bugs connus / points ouverts :
 
 Les anciens bugs de la v1 (base64 corrompus ×2, MIME des `.wav`, `arguments.callee`) sont
 résolus par la v2.
+le temps a effacé. Le NFT est utilisé pour la **décentralisation du contenu, PAS pour la
+propriété** (le paradoxe avec « La propriété, c'est le vol ! » est assumé : les NFT
+servent de containers de contenu décentralisés / CDN communautaire).
+
+## 2. État actuel du site (analyse faite)
+
+Pages : `index.html`, `lostwave.html` (NFT Tezos, contrat `KT1CpFdy2sDbCBfLv3L6EHpcTfjG8rnXMHPo`),
+`nftgallery.html` (NFT MultiversX, collections `STREET-b10df3`, `YGGDRSL23-075ceb`),
+`anarchisme.html`. CSS : `css/style.css`, police `fonts/HelpMe.woff2`. JS : `js/lostwave.js`,
+`js/nftgallery.js`.
+
+Bugs connus à corriger (Phase 1 du plan) :
+1. `anarchisme.html` référence 4 vidéos dans `video/` qui **n'existe pas** (revert git) → page cassée.
+   **[DÉCISION OWNER]** Vidéos de plusieurs Go hébergées sur **IPFS** (CIDv1, raw-leaves,
+   épinglées par le owner) : la page v2 les sert via `ipfs:<cid>` + gateways publics.
+   Ne pas recompresser sans vérifier d'éventuels éléments cachés dans l'audio.
+2. `lostwave.html` : base64 corrompu (`w4l0cmFuZ2U...` → devrait décoder « Étrange Sensation »).
+3. `nftgallery.html` : base64 avec coquille (décodage : « libertÉ, dÑmocratie, partage »).
+4. Les `.wav` sont déclarés `type="audio/mpeg"` → corriger en `audio/wav`.
+5. `logo_rmx.png` = 1,3 Mo → à compresser.
+6. `ANARCHISME.mp3` = 23 Mo ; **vérifier son spectrogramme avant gravure** (le mp3 lossy
+   a pu détruire une éventuelle image cachée).
+7. Script audio-clic dupliqué ×4 avec `arguments.callee` (obsolète).
 
 **RÈGLE CRITIQUE — fichiers audio :** ne JAMAIS convertir/recompresser les `.wav`
 `image.wav` / `pp.wav` (lossy = destruction des images spectrogramme). Le format wav 16-bit
@@ -104,10 +127,9 @@ Résumé :
 - `nft-gallery` : `{chain, collections:[...], filter:true}` — galerie
 - `video-frame` : `{source, aspect:"16/9"}`
 - `video-embed` : `{provider, video_id, aspect:"16/9"}` — YouTube/Peertube/URL externe.
-  **[DÉCISION OWNER]** v1 du site : les vidéos de la page Anarchisme en `video-embed`
-  (elles font plusieurs Go, trop lourdes pour Arweave/GitHub). Évolution possible plus
-  tard : pinning IPFS ou autre hébergement décentralisé → le contrat étant la source de
-  vérité, changer d'hébergeur = une transaction, pas une refonte.
+- `video-frame` : `{source, aspect:"16/9"}` — vidéo décentralisée ; la page Anarchisme
+  l'utilise avec `source: "ipfs:<cid>"` (4 vidéos « Ni Dieu ni maître », CIDs épinglés
+  par le owner ; le renderer retombe sur plusieurs gateways publics).
 - `game-embed` : `{source, engine:"rpgmaker", mode:"iframe"}` — **[À DÉFINIR PLUS TARD]**
   le jeu RPG Maker n'existe pas encore ; type prévu pour le jour où il existera.
 - `project-list` : `{projects:[{name, description, url, status:"wip"|"done"|"abandonné"}]}`
